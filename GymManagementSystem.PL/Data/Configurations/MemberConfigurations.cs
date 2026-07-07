@@ -1,4 +1,4 @@
-﻿using GymManagementSystem.DAL.Data.Models;
+﻿using GymManagementSystem.DAL.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,6 +11,9 @@ namespace GymManagementSystem.DAL.Data.Configurations
             builder.Property(X => X.CreatedAt)
                    .HasColumnName("JoinDate")
                    .HasDefaultValueSql("GETDATE()");
+            builder.HasOne(M => M.HealthRecord)
+                .WithOne(HR => HR.Member)
+                .HasForeignKey<HealthRecord>(M => M.MemberId);
 
             base.Configure(builder);
 

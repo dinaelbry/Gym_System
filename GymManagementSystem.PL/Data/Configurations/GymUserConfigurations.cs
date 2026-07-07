@@ -1,10 +1,10 @@
-﻿using GymManagementSystem.DAL.Data.Models;
+﻿using GymManagementSystem.DAL.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GymManagementSystem.DAL.Data.Configurations
 {
-    internal class GymUserConfigurations<T> : IEntityTypeConfiguration<T> where T : GymUser
+    internal class GymUserConfigurations<T> : IEntityTypeConfiguration<T> where T : GymUser // member / trainer
     {
         public void Configure(EntityTypeBuilder<T> builder)
         {

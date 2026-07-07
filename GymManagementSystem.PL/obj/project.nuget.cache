@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9LNeI31b4u8=",
+  "dgSpecHash": "480ANcfNstw=",
   "success": true,
-  "projectFilePath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymSystem.DAL.csproj",
+  "projectFilePath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymManagementSystem.DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\dinaa\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\dinaa\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

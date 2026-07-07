@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MMvRP0+IfVc=",
+  "dgSpecHash": "DAru+TPpjX8=",
   "success": true,
   "projectFilePath": "D:\\.NET ROUTE\\Gym System MVC\\GymSystem\\GymSystem.PL.csproj",
   "expectedPackageFiles": [
@@ -25,7 +25,6 @@
     "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.15\\microsoft.entityframeworkcore.design.9.0.15.nupkg.sha512",
     "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.15\\microsoft.entityframeworkcore.relational.9.0.15.nupkg.sha512",
     "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\9.0.15\\microsoft.entityframeworkcore.sqlserver.9.0.15.nupkg.sha512",
-    "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.15\\microsoft.entityframeworkcore.tools.9.0.15.nupkg.sha512",
     "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.15\\microsoft.extensions.caching.abstractions.9.0.15.nupkg.sha512",
     "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.15\\microsoft.extensions.caching.memory.9.0.15.nupkg.sha512",
     "C:\\Users\\dinaa\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.15\\microsoft.extensions.configuration.abstractions.9.0.15.nupkg.sha512",

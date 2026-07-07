@@ -585,12 +585,6 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Tools/9.0.15": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.EntityFrameworkCore.Design": "9.0.15"
-        }
-      },
       "Microsoft.Extensions.Caching.Abstractions/9.0.15": {
         "type": "package",
         "dependencies": {
@@ -1599,30 +1593,30 @@
           }
         }
       },
-      "GymSystem.BLL/1.0.0": {
+      "GymManagementSystem.BLL/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "GymSystem.DAL": "1.0.0"
+          "GymManagementSystem.DAL": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/GymSystem.BLL.dll": {}
+          "bin/placeholder/GymManagementSystem.BLL.dll": {}
         },
         "runtime": {
-          "bin/placeholder/GymSystem.BLL.dll": {}
+          "bin/placeholder/GymManagementSystem.BLL.dll": {}
         }
       },
-      "GymSystem.DAL/1.0.0": {
+      "GymManagementSystem.DAL/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.15"
         },
         "compile": {
-          "bin/placeholder/GymSystem.DAL.dll": {}
+          "bin/placeholder/GymManagementSystem.DAL.dll": {}
         },
         "runtime": {
-          "bin/placeholder/GymSystem.DAL.dll": {}
+          "bin/placeholder/GymManagementSystem.DAL.dll": {}
         }
       }
     }
@@ -2900,31 +2894,6 @@
         "lib/net8.0/Microsoft.EntityFrameworkCore.SqlServer.xml",
         "microsoft.entityframeworkcore.sqlserver.9.0.15.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlserver.nuspec"
-      ]
-    },
-    "Microsoft.EntityFrameworkCore.Tools/9.0.15": {
-      "sha512": "QT3iBy2zJYGFrk0RFHG8i4pQJ89YllWBjB7fHy8/ZAgdLsfSwJW896zwQgMRzRqpD8RP1184LPIpwAzkwg4Zvw==",
-      "type": "package",
-      "path": "microsoft.entityframeworkcore.tools/9.0.15",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "docs/PACKAGE.md",
-        "microsoft.entityframeworkcore.tools.9.0.15.nupkg.sha512",
-        "microsoft.entityframeworkcore.tools.nuspec",
-        "tools/EntityFrameworkCore.PS2.psd1",
-        "tools/EntityFrameworkCore.PS2.psm1",
-        "tools/EntityFrameworkCore.psd1",
-        "tools/EntityFrameworkCore.psm1",
-        "tools/about_EntityFrameworkCore.help.txt",
-        "tools/init.ps1",
-        "tools/net472/any/ef.exe",
-        "tools/net472/win-arm64/ef.exe",
-        "tools/net472/win-x86/ef.exe",
-        "tools/netcoreapp2.0/any/ef.dll",
-        "tools/netcoreapp2.0/any/ef.runtimeconfig.json"
       ]
     },
     "Microsoft.Extensions.Caching.Abstractions/9.0.15": {
@@ -4728,22 +4697,21 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "GymSystem.BLL/1.0.0": {
+    "GymManagementSystem.BLL/1.0.0": {
       "type": "project",
-      "path": "../GymManagementSystem.DAL/GymSystem.BLL.csproj",
-      "msbuildProject": "../GymManagementSystem.DAL/GymSystem.BLL.csproj"
+      "path": "../GymManagementSystem.DAL/GymManagementSystem.BLL.csproj",
+      "msbuildProject": "../GymManagementSystem.DAL/GymManagementSystem.BLL.csproj"
     },
-    "GymSystem.DAL/1.0.0": {
+    "GymManagementSystem.DAL/1.0.0": {
       "type": "project",
-      "path": "../GymManagementSystem.PL/GymSystem.DAL.csproj",
-      "msbuildProject": "../GymManagementSystem.PL/GymSystem.DAL.csproj"
+      "path": "../GymManagementSystem.PL/GymManagementSystem.DAL.csproj",
+      "msbuildProject": "../GymManagementSystem.PL/GymManagementSystem.DAL.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "GymSystem.BLL >= 1.0.0",
-      "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.15",
-      "Microsoft.EntityFrameworkCore.Tools >= 9.0.15"
+      "GymManagementSystem.BLL >= 1.0.0",
+      "Microsoft.EntityFrameworkCore.Design >= 9.0.15"
     ]
   },
   "packageFolders": {
@@ -4778,8 +4746,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymSystem.BLL.csproj": {
-              "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymSystem.BLL.csproj"
+            "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymManagementSystem.BLL.csproj": {
+              "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymManagementSystem.BLL.csproj"
             }
           }
         }
@@ -4800,11 +4768,7 @@
       "net9.0": {
         "targetAlias": "net9.0",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.SqlServer": {
-            "target": "Package",
-            "version": "[9.0.15, )"
-          },
-          "Microsoft.EntityFrameworkCore.Tools": {
+          "Microsoft.EntityFrameworkCore.Design": {
             "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
             "suppressParent": "All",
             "target": "Package",

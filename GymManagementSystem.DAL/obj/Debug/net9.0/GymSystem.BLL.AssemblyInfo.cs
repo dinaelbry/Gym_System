@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GymSystem.BLL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dd6e968dd919564c09f27e7b39b40cafc91b738e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ca2a6271e4a6daf8364be1c49ff4e31dea0da05f")]
 [assembly: System.Reflection.AssemblyProductAttribute("GymSystem.BLL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GymSystem.BLL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

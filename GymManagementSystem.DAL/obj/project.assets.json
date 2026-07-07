@@ -989,17 +989,17 @@
           }
         }
       },
-      "GymSystem.DAL/1.0.0": {
+      "GymManagementSystem.DAL/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.15"
         },
         "compile": {
-          "bin/placeholder/GymSystem.DAL.dll": {}
+          "bin/placeholder/GymManagementSystem.DAL.dll": {}
         },
         "runtime": {
-          "bin/placeholder/GymSystem.DAL.dll": {}
+          "bin/placeholder/GymManagementSystem.DAL.dll": {}
         }
       }
     }
@@ -2752,15 +2752,15 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "GymSystem.DAL/1.0.0": {
+    "GymManagementSystem.DAL/1.0.0": {
       "type": "project",
-      "path": "../GymManagementSystem.PL/GymSystem.DAL.csproj",
-      "msbuildProject": "../GymManagementSystem.PL/GymSystem.DAL.csproj"
+      "path": "../GymManagementSystem.PL/GymManagementSystem.DAL.csproj",
+      "msbuildProject": "../GymManagementSystem.PL/GymManagementSystem.DAL.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
-      "GymSystem.DAL >= 1.0.0"
+      "GymManagementSystem.DAL >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -2770,9 +2770,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymSystem.BLL.csproj",
-      "projectName": "GymSystem.BLL",
-      "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymSystem.BLL.csproj",
+      "projectUniqueName": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymManagementSystem.BLL.csproj",
+      "projectName": "GymManagementSystem.BLL",
+      "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\GymManagementSystem.BLL.csproj",
       "packagesPath": "C:\\Users\\dinaa\\.nuget\\packages\\",
       "outputPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.DAL\\obj\\",
       "projectStyle": "PackageReference",
@@ -2795,8 +2795,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymSystem.DAL.csproj": {
-              "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymSystem.DAL.csproj"
+            "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymManagementSystem.DAL.csproj": {
+              "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymManagementSystem.DAL.csproj"
             }
           }
         }

@@ -1,20 +1,20 @@
-﻿using GymManagementSystem.BLL.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿//using GymManagementSystem.BLL.Services.Interfaces;
+//using Microsoft.AspNetCore.Mvc;
 
-namespace GymManagementSystem.PL.Controllers
-{
-    public class SessionsController : Controller
-    {
-        private readonly ISessionService _sessionService;
+//namespace GymSystem.PL.Controllers
+//{
+//    public class SessionsController : Controller
+//    {
+//        private readonly ISessionService _sessionService;
 
-        public SessionsController(ISessionService sessionService)
-        {
-            _sessionService = sessionService;
-        }
-        public async Task<IActionResult> Index(CancellationToken ct)
-        {
-            var Sessions = await _sessionService.GetAllSessionsAsync(ct);
-            return View(Sessions);
-        }
-    }
-}
+//        public SessionsController(ISessionService sessionService)
+//        {
+//            _sessionService = sessionService;
+//        }
+//        public async Task<IActionResult> Index(CancellationToken ct)
+//        {
+//            var Sessions = await _sessionService.GetAllSessionsAsync(ct);
+//            return View(Sessions);
+//        }
+//    }
+//}

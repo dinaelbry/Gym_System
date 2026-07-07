@@ -4716,9 +4716,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymSystem.DAL.csproj",
-      "projectName": "GymSystem.DAL",
-      "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymSystem.DAL.csproj",
+      "projectUniqueName": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymManagementSystem.DAL.csproj",
+      "projectName": "GymManagementSystem.DAL",
+      "projectPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\GymManagementSystem.DAL.csproj",
       "packagesPath": "C:\\Users\\dinaa\\.nuget\\packages\\",
       "outputPath": "D:\\.NET ROUTE\\Gym System MVC\\GymManagementSystem.PL\\obj\\",
       "projectStyle": "PackageReference",

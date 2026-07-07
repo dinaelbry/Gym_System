@@ -1,4 +1,4 @@
-﻿using GymManagementSystem.DAL.Data.Models;
+﻿using GymManagementSystem.DAL.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,22 +8,22 @@ namespace GymManagementSystem.DAL.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Plan> builder)
         {
-            builder.Property(X => X.Name)
+            builder.Property(p => p.Name)
                    .HasColumnType("varchar")
                    .HasMaxLength(50);
 
-            builder.Property(X => X.Description)
+            builder.Property(p => p.Description)
                    .HasMaxLength(200);
 
-            builder.Property(X => X.Price)
+            builder.Property(p => p.Price)
                 .HasPrecision(10, 2);
 
-            builder.Property(X => X.CreatedAt)
+            builder.Property(p => p.CreatedAt)
                    .HasDefaultValueSql("GETDATE()");
 
             builder.ToTable(Tb =>
             {
-                Tb.HasCheckConstraint("PlanDurationCheck", "DurationDays Between 1 and 365");
+                Tb.HasCheckConstraint("DurationCheckValue", "Duration Between 1 and 365");
             });
         }
     }
