@@ -1,4 +1,4 @@
-﻿using GymSystem.DAL.Entities;
+﻿using GymSystem.DAL.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace GymSystem.DAL.Repository.Interfaces
 {
-    public interface IPlanRepository
+    public interface IGenericRepository
     {
-        Task<IEnumerable<Plan>> GetAllPlans(bool isTracked, CancellationToken ct = default);
-        Task<Plan?> GetPlanById(int id, CancellationToken ct=default);
-        void AddPlan(Plan plan);
-        void UpdatePlan(Plan plan);
-        void DeletePlan(Plan id);
+        Task<IEnumerable<Plan>> GetAll(bool isTracked, CancellationToken ct = default);
+        Task<Plan?> GetById(int id, CancellationToken ct=default);
+        void Add(Plan plan);
+        void Update(Plan plan);
+        void Delete(Plan id);
         Task<int> CompleteAsync();
     }
 }
