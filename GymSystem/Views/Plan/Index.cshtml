@@ -46,10 +46,10 @@
                             </a>
 
                             <div class="d-flex gap-2">
-                                <a href="\Plan\Edit\@plan.Id" class="btn btn-outline btn-sm flex-fill">
-                                    <i class="bi bi-pencil me-1"></i>Edit
+                                        <a asp-controller="Plan" asp-action="Edit" asp-route-id="@plan.Id" class="btn btn-outline btn-sm flex-fill">
+                                            <i class="bi bi-pencil me-1"></i>Edit
                                 </a>
-                                <form href="\Plans\Activate\1" method="post" class="flex-fill">
+                                        <form asp-controller="Plan" asp-action="ToggleActive" asp-route-id="@plan.Id" method="post" class="flex-fill">
 
                                     @if (plan.IsActive ){
                                             @* If Plan is Active put class text-danger if not text-success *@
