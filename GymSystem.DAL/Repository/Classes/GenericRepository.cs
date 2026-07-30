@@ -19,10 +19,9 @@ namespace GymSystem.DAL.Repository.Classes
             _dbcontext = dbcontext;
         }
 
-        public async Task<int> Add(TEntity entity, CancellationToken ct = default)
+        public void Add(TEntity entity, CancellationToken ct = default)
         {
              _dbcontext.Set<TEntity>().Add(entity);
-            return await _dbcontext.SaveChangesAsync(ct);
         }
 
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default)
@@ -30,45 +29,43 @@ namespace GymSystem.DAL.Repository.Classes
             return await _dbcontext.Set<TEntity>().AnyAsync(predicate, ct);
         }
 
- 
-
-        public async Task<int> Delete(TEntity entity, CancellationToken ct = default)
+        public async Task<int> CompleteAsync(CancellationToken ct = default)
         {
-            var item = await _dbcontext.Set<TEntity>()
-                .FirstOrDefaultAsync(x => x.Id == entity.Id, ct);
-
-            if (item == null)
-                return 0;
-
-            _dbcontext.Set<TEntity>().Remove(item);
             return await _dbcontext.SaveChangesAsync(ct);
+        }
+
+        public  void Update(TEntity entity, CancellationToken ct = default)
+        {
+            _dbcontext.Set<TEntity>().Update(entity);
+        }
+
+        public void Delete(TEntity entity, CancellationToken ct = default)
+        {
+            _dbcontext.Set<TEntity>().Remove(entity);
         }
 
         public Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, bool isTracked = false, CancellationToken ct = default)
         {
+
+            // linq => sql
             var items = isTracked ? _dbcontext.Set<TEntity>() : _dbcontext.Set<TEntity>().AsNoTracking();
             return items.FirstOrDefaultAsync(predicate, ct);
         }
 
         public async Task<IEnumerable<TEntity>> GetAll(bool isTracked, CancellationToken ct = default)
         {
-            var items = isTracked
-                ? _dbcontext.Set<TEntity>()
-                : _dbcontext.Set<TEntity>().AsNoTracking();
+            var items = isTracked ? _dbcontext.Set<TEntity>() : _dbcontext.Set<TEntity>().AsNoTracking();
 
             return await items.ToListAsync(ct);
         }        
 
         public async Task<TEntity?> GetById(int id, CancellationToken ct = default)
         {
-            var item = await _dbcontext.Set<TEntity>().FirstOrDefaultAsync(p => p.Id == id, ct);
+           var item = await _dbcontext.Set<TEntity>().FirstOrDefaultAsync(p => p.Id == id, ct);
             return item;
         }
 
-        public async Task<int> Update(TEntity entity, CancellationToken ct = default)
-        {
-            _dbcontext.Set<TEntity>().Update(entity);
-            return await _dbcontext.SaveChangesAsync(ct);
-        }
+        public Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken ct = default)  => predicate is null ? _dbcontext.Set<TEntity>().AsNoTracking().CountAsync(ct) : _dbcontext.Set<TEntity>().AsNoTracking().CountAsync(predicate, ct);
+        
     }
 }
