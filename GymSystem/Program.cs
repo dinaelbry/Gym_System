@@ -4,6 +4,8 @@ using GymSystem.DAL.Data.Contexts;
 using GymSystem.DAL.Repository.Classes;
 using GymSystem.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using GymManagementSystem.BLL.Services.Attachment;
+using GymSystem.BLL.Services.Attachment;
 namespace GymSystem
 {
     public class Program
@@ -16,7 +18,10 @@ namespace GymSystem
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IMemberServices, MemberServices>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddDbContext<GymDbContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
                     });
