@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-using GymSystem.DAL.Data.Entities;
+using GymSystem.DAL.Entities;
 
 namespace GymSystem.DAL.Data.Contexts
 {
@@ -23,7 +23,16 @@ namespace GymSystem.DAL.Data.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+           
         }
         public DbSet<Plan> Plans { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<HealthRecord> HealthRecords { get; set; }
+        public DbSet<Member> Members { get; set; }
+        public DbSet<MemberShip> Memberships { get; set; }
+        public DbSet<Session> Sessions { get; set; }
     }
 }

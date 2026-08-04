@@ -1,10 +1,6 @@
-﻿using GymSystem.DAL.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GymSystem.DAL.Entities;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GymSystem.DAL.Repository.Interfaces
 {
@@ -12,10 +8,12 @@ namespace GymSystem.DAL.Repository.Interfaces
     {
         Task<IEnumerable<TEntity>> GetAll(bool isTracked, CancellationToken ct = default);
         Task<TEntity?> GetById(int id, CancellationToken ct = default);
-        Task<int> Add(TEntity entity, CancellationToken ct = default);
-        Task<int> Update(TEntity entity, CancellationToken ct = default);
-        Task<int> Delete(TEntity entity, CancellationToken ct = default);
-         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,bool isTracked=false ,CancellationToken ct = default);
-        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default);
+        void Add(TEntity entity, CancellationToken ct = default);
+        void Update(TEntity entity, CancellationToken ct = default);
+        void Delete(TEntity entity, CancellationToken ct = default);
+        Task<int> CompleteAsync(CancellationToken ct = default);
+        Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,bool isTracked=false ,CancellationToken ct = default);
+        Task<bool> Any(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default);
+        Task<int> CountAsync(Expression<Func<TEntity,bool>>? predicate =null ,CancellationToken ct = default);
     }
 }

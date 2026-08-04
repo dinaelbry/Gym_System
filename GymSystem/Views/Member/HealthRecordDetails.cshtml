@@ -64,16 +64,15 @@
                                             </div>
                                             <h6 class= "text-muted mb-0"> Note </h6>
                                         </div>
-                                        <h4 class= "text-danger mb-0"> @Model.Note </h4>
+                                        <h4 class="text-danger mb-0">@(!string.IsNullOrEmpty(Model.Note) ? Model.Note : "No Note Found")</h4>
                                     </div>
                                 </div>
                             </div>
 
                             <div class= "card-footer bg-white border-0 p-4">
                                 <div class= "d-flex justify-content-between gap-2">
-                                    <a asp - controller = "Member" asp-action = "Index" class= "btn btn-fill flex-fill">
-                                        Back to
-                                        List
+                                    <a asp-controller="Member" asp-action="Index" class= "btn btn-fill flex-fill">
+                                        Back to List
                                     </a>
                                 </div>
                             </div>

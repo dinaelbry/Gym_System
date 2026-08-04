@@ -1,5 +1,5 @@
 using GymSystem.BLL.ViewModels.HomeViewModels;
-using GymSystem.DAL.Data.Entities;
+using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Classes;
 using GymSystem.DAL.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;

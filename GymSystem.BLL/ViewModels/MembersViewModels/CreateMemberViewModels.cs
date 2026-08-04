@@ -1,4 +1,5 @@
-﻿using GymSystem.DAL.Data.Entities.Enums;
+﻿using GymSystem.DAL.Entities.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -9,6 +10,9 @@ namespace GymSystem.BLL.ViewModels.MembersViewModels
         [Required(ErrorMessage = "Name is required")]
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces")]
         public string Name { get; set; } = default!;
+
+        [Required(ErrorMessage = "Photo is required")]
+        public IFormFile Photo { get; set; } = default!;
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid email address")]

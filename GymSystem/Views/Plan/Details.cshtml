@@ -1,5 +1,7 @@
-﻿@using GymSystem.DAL.Data.Entities
-@model Plan
+﻿@model PlanViewModel
+@{
+    ViewData["Title"] = "Plan Details";
+}
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -75,7 +77,7 @@
                 </div>
                 <div class="card-footer bg-white border-0 p-4">
                     <div class="d-flex justify-content-between gap-2">
-                        <a href="/Plan/Index" class="btn btn-outline flex-fill">
+                        <a asp-action="Index" class="btn btn-outline flex-fill">
                             <i class="bi bi-arrow-left me-1"></i>Back
                         </a>
                     </div>
