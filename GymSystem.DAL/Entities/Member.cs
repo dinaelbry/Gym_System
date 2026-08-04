@@ -1,4 +1,4 @@
-﻿namespace GymSystem.DAL.Data.Entities
+﻿namespace GymSystem.DAL.Entities
 {
     public class Member:GymUser
     {

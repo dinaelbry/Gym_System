@@ -1,16 +1,15 @@
-﻿using GymSystem.DAL.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GymSystem.DAL.Entities;
+
 
 namespace GymSystem.DAL.Repository.Interfaces
 {
     public interface IUnitOfWork
     {
         //UnitOfWork.GetRepos<Member>().GetAll();
-        public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity , new();
-        public Task<int> CompleteAsync();
+
+         IMembershipRepository MembershipRepository { get; }
+
+         IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity , new();
+         Task<int> CompleteAsync(CancellationToken ct = default);
     }
 }

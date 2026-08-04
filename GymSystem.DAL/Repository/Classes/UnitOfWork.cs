@@ -1,28 +1,27 @@
 ﻿using GymSystem.DAL.Data.Contexts;
-using GymSystem.DAL.Data.Entities;
+using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GymSystem.DAL.Repository.Classes
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly GymDbContext dbContext;
-        private readonly Dictionary<string, object> _Repos =[];
-        public UnitOfWork(GymDbContext dbContext)
+        public IMembershipRepository MembershipRepository { get; }
+
+
+      private readonly Dictionary<string, object> _Repos = new();
+      private readonly GymDbContext dbContext;
+        public UnitOfWork(GymDbContext dbContext, IMembershipRepository membershipRepository)
         {
             this.dbContext = dbContext;
+            MembershipRepository = membershipRepository;
         }
 
-        public async Task<int> CompleteAsync()
-        {
-            return await dbContext.SaveChangesAsync();
+        public async Task<int> CompleteAsync(CancellationToken ct = default)
+       => await dbContext.SaveChangesAsync(ct);
 
-        }
+        
 
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {
@@ -35,5 +34,7 @@ namespace GymSystem.DAL.Repository.Classes
             _Repos[TypeName] = NewRepository;
             return NewRepository;
         }
+
+
     }
 }

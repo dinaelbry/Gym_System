@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymSystem.DAL.Data.Entities
+namespace GymSystem.DAL.Entities
 {
     public class Booking: BaseEntity
     {
@@ -14,6 +14,5 @@ namespace GymSystem.DAL.Data.Entities
         public Session Session { get; set; } = null!;
         public int SessionId { get; set; }
 
-        public  ICollection<Booking> Bookings { get; set; } = new HashSet<Booking>();
     }
 }

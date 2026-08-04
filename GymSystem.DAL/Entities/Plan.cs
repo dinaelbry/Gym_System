@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymSystem.DAL.Data.Entities
+namespace GymSystem.DAL.Entities
 {
     public class Plan : BaseEntity
     {

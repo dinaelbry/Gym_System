@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-using GymSystem.DAL.Data.Entities;
+using GymSystem.DAL.Entities;
 
 namespace GymSystem.DAL.Data.Contexts
 {

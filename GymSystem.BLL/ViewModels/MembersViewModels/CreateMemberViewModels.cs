@@ -1,4 +1,4 @@
-﻿using GymSystem.DAL.Data.Entities.Enums;
+﻿using GymSystem.DAL.Entities.Enums;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 

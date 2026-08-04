@@ -1,9 +1,11 @@
-﻿using GymManagementSystem.BLL.Services.Attachment;
+﻿using GymSystem.BLL.Services.Attachment;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.MembersViewModels;
-using GymSystem.DAL.Data.Entities;
+using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Classes;
 using GymSystem.DAL.Repository.Interfaces;
+
+
 namespace GymSystem.BLL.Services.Classes
 {
     public class MemberServices : IMemberServices
@@ -107,8 +109,8 @@ namespace GymSystem.BLL.Services.Classes
         {
             // GET ALL 
             // Any (Expression <Func<TEntity, bool>> predicate)
-            var emailExists = await unitOfWork.GetRepository<Member>().AnyAsync(m => m.Email == model.Email, ct);
-            var phoneExists = await unitOfWork.GetRepository<Member>().AnyAsync(m => m.PhoneNumber == model.PhoneNumber, ct);
+            var emailExists = await unitOfWork.GetRepository<Member>().Any(m => m.Email == model.Email, ct);
+            var phoneExists = await unitOfWork.GetRepository<Member>().Any(m => m.PhoneNumber == model.PhoneNumber, ct);
 
             if (emailExists || phoneExists) return false;
 
@@ -155,8 +157,8 @@ namespace GymSystem.BLL.Services.Classes
         {
             var member = await unitOfWork.GetRepository<Member>().GetById(id, ct);
             if (member is null) return false;
-            if (await unitOfWork.GetRepository<Member>().AnyAsync(m=> m.Email == model.Email && m.Id != id, ct)) return false;
-            if (await unitOfWork.GetRepository<Member>().AnyAsync(m => m.PhoneNumber == model.Phone && m.Id != id, ct)) return false;
+            if (await unitOfWork.GetRepository<Member>().Any(m=> m.Email == model.Email && m.Id != id, ct)) return false;
+            if (await unitOfWork.GetRepository<Member>().Any(m => m.PhoneNumber == model.Phone && m.Id != id, ct)) return false;
             member.Email= model.Email;
             member.PhoneNumber = model.Phone;
             member.Address ??= new Address();
@@ -187,7 +189,7 @@ namespace GymSystem.BLL.Services.Classes
         }
         public async Task<bool> DeleteMemberAsync(int memberId,CancellationToken ct = default)
         {
-            var hasFutureSessions = await unitOfWork.GetRepository<Booking>().AnyAsync(b => b.MemberId == memberId && b.Session.EndDate > DateTime.Now,ct);
+            var hasFutureSessions = await unitOfWork.GetRepository<Booking>().Any(b => b.MemberId == memberId && b.Session.EndDate > DateTime.Now,ct);
             if (hasFutureSessions) return false;
 
             var member = await unitOfWork.GetRepository<Member>().GetById(memberId, ct);

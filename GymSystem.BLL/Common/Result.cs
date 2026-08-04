@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GymSystem.BLL.Common
+﻿namespace GymSystem.BLL.Common
 {
     public class Result
     {
-        public bool Succeeded { get; }
-        public string? Message { get; }
+        public bool Success { get; }
+        public string? Error { get; }
 
-        private Result(bool succeeded, string? message)
+        private Result(bool success, string? error)
         {
-            Succeeded = succeeded;
-            Message = message;
+            Success = success;
+            Error = error;
         }
 
         public static Result Ok() => new(true, null);
-        public static Result Fail(string message) => new(false, message);
-        public static Result NotFound(string message) => new(false, message);
+        public static Result Fail(string error) => new(false, error);
+        public static Result NotFound(string error = "Not found.") => new(false, error);
     }
 }

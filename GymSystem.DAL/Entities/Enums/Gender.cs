@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymSystem.DAL.Data.Entities.Enums
+namespace GymSystem.DAL.Entities.Enums
 {
     public enum Gender
     {

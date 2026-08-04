@@ -1,10 +1,6 @@
-﻿using GymSystem.DAL.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GymSystem.DAL.Entities;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GymSystem.DAL.Repository.Interfaces
 {
@@ -17,7 +13,7 @@ namespace GymSystem.DAL.Repository.Interfaces
         void Delete(TEntity entity, CancellationToken ct = default);
         Task<int> CompleteAsync(CancellationToken ct = default);
         Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate,bool isTracked=false ,CancellationToken ct = default);
-        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default);
+        Task<bool> Any(Expression<Func<TEntity, bool>> predicate, CancellationToken ct = default);
         Task<int> CountAsync(Expression<Func<TEntity,bool>>? predicate =null ,CancellationToken ct = default);
     }
 }

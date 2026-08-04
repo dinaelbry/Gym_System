@@ -1,4 +1,6 @@
-﻿namespace GymManagementSystem.BLL.Services.Attachment
+﻿using GymSystem.BLL.Services.Attachment;
+
+namespace GymSystem.BLL.Services.Attachment
 {
     public interface IAttachmentService
     {

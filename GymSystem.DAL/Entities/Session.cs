@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace GymSystem.DAL.Data.Entities
+
+namespace GymSystem.DAL.Entities
 {
     public class Session: BaseEntity
     {
@@ -16,5 +13,6 @@ namespace GymSystem.DAL.Data.Entities
         public int TrainerId { get; set; }
         public Category Category { get; set; } = null!;
         public int CategoryId { get; set; }
+        public ICollection<Booking> Bookings { get; set; } = new HashSet<Booking>();
     }
 }

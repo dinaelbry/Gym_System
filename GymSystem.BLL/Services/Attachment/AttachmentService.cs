@@ -1,4 +1,4 @@
-﻿using GymManagementSystem.BLL.Services.Attachment;
+﻿using GymSystem.BLL.Services.Attachment;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 

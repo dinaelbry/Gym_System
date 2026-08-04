@@ -1,24 +1,26 @@
 ﻿using GymSystem.BLL.Common;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.PlanViewModels;
-using GymSystem.DAL.Data.Entities;
+using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Interfaces;
 
-namespace GymSystem.BLL.Services.Classes
+namespace GymManagementBLL.Services.Classes
 {
     public class PlanService : IPlanService
     {
-
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
+        
 
         public PlanService(IUnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
+          
         }
 
         public async Task<IEnumerable<PlanViewModel>> GetAllPlansAsync(CancellationToken ct = default)
         {
-            var plans = await unitOfWork.GetRepository<Plan>().GetAll(false, ct);
+            var plans = await _unitOfWork.GetRepository<Plan>().GetAll(false,ct);
+
 
             return plans.Select(p => new PlanViewModel
             {
@@ -30,10 +32,9 @@ namespace GymSystem.BLL.Services.Classes
                 IsActive = p.IsActive
             });
         }
-
         public async Task<PlanViewModel?> GetPlanByIdAsync(int planId, CancellationToken ct = default)
         {
-            var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
+            var plan = await _unitOfWork.GetRepository<Plan>().GetById(planId, ct);
             if (plan is null) return null;
 
             return new PlanViewModel
@@ -49,8 +50,9 @@ namespace GymSystem.BLL.Services.Classes
 
         public async Task<UpdatePlanViewModel?> GetPlanToUpdateAsync(int planId, CancellationToken ct = default)
         {
-            var plan = await unitOfWork.GetRepository<Plan>().GetById(planId, ct);
-            if (plan is null) return null;
+            var plan = await _unitOfWork.GetRepository<Plan>().GetById(planId, ct);
+            if (plan is null || !plan.IsActive) return null;
+            if (await HasActiveMembershipsAsync(planId, ct)) return null;
 
             return new UpdatePlanViewModel
             {
@@ -64,7 +66,7 @@ namespace GymSystem.BLL.Services.Classes
 
         public async Task<Result> ToggleActivationAsync(int planId, CancellationToken ct = default)
         {
-            var repo = unitOfWork.GetRepository<Plan>();
+            var repo = _unitOfWork.GetRepository<Plan>();
             var plan = await repo.GetById(planId, ct);
             if (plan is null) return Result.NotFound("Plan not found.");
 
@@ -74,33 +76,38 @@ namespace GymSystem.BLL.Services.Classes
             plan.IsActive = !plan.IsActive;
             plan.UpdatedAt = DateTime.Now;
 
-             repo.Update(plan, ct);
-            var result = await unitOfWork.CompleteAsync();
+            repo.Update(plan);
+            var result = await _unitOfWork.CompleteAsync(ct);
 
-            return result > 0 ? Result.Ok() : Result.Fail("Failed to toggle plan status.");
+            return result > 0 ? Result.Ok() : Result.Fail("Failed to Toggle Plan Status");
         }
-
         public async Task<Result> UpdatePlanAsync(int id, UpdatePlanViewModel model, CancellationToken ct = default)
         {
-            var repo = unitOfWork.GetRepository<Plan>();
+            var repo = _unitOfWork.GetRepository<Plan>();
             var plan = await repo.GetById(id, ct);
             if (plan is null) return Result.NotFound("Plan not found.");
+      if (await HasActiveMembershipsAsync(id, ct))
+                return Result.Fail("Cannot edit a plan that has active memberships.");
 
             plan.Description = model.Description;
             plan.Duration = model.DurationDays;
             plan.Price = model.Price;
             plan.UpdatedAt = DateTime.Now;
 
-             repo.Update(plan, ct);
-            var result = await unitOfWork.CompleteAsync();
+      
+            repo.Update(plan,ct);
+            var result = await _unitOfWork.CompleteAsync(ct);
 
             return result > 0 ? Result.Ok() : Result.Fail("Failed to update plan.");
         }
 
-        // helper method
+
         private async Task<bool> HasActiveMembershipsAsync(int planId, CancellationToken ct)
         {
-            return await unitOfWork.GetRepository<MemberShip>().AnyAsync(m => m.PlanId == planId && m.EndDate > DateTime.Now, ct);
+            return await _unitOfWork.GetRepository<MemberShip>()
+                .Any(m => m.PlanId == planId && m.EndDate > DateTime.Now, ct);
         }
+
+        
     }
 }

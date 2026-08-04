@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+
 
 namespace GymSystem.BLL.ViewModels.MembershipViewModels
 {
     public class CreateMembershipViewModel
     {
-        public int PlanId { get; set; }
+        [Required(ErrorMessage = "Please choose a member")]
         public int MemberId { get; set; }
-        public DateTime? StartDate {  get; set; }
+
+        [Required(ErrorMessage = "Please choose a plan")]
+        public int PlanId { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime? StartDate { get; set; }
     }
 }

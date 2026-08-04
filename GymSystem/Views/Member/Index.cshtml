@@ -40,13 +40,13 @@
             <div class="table-responsive " style="overflow: visible;">
                 <table class="table table-borderless">
                     <thead>
-                        <tr>
-                            <th><span>Photo</span></th>
-                            <th><span>Name</span></th>
-                            <th><span>Email</span></th>
-                            <th><span>Gender</span></th>
-                            <th><span>Phone</span></th>
-                            <th><span>Action</span></th>
+                    <tr>
+                        <th><span>@nameof(MemberViewModel.Photo)</span></th>
+                        <th><span>@nameof(MemberViewModel.Name)</span></th>
+                        <th><span>@nameof(MemberViewModel.Email)</span></th>
+                        <th><span>@nameof(MemberViewModel.Gender)</span></th>
+                        <th><span>@nameof(MemberViewModel.Phone)</span></th>
+                        <th><span>Action</span></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,72 +56,64 @@
                                 <tr>
                                     <td>
                                         <span class="avatar">
-                                            <img src="~/images/@member.Photo" alt="Default Avatar" class="rounded-circle"
-                                                 style="width: 40px; height: 40px;" />
-                                        </span>
-                                    </td>
-                                    <td><span>@member.Name</span></td>
-                                    <td><span>@member.Email</span></td>
-                                    <td><span>@member.Gender</span></td>
-                                    <td><span>@member.Phone</span></td>
-                                    <td class="action position-relative">
-                                        <div class="dropdown">
-                                            <button class="btn btn-link p-0 border-0" type="button"
-                                                    id="dropdownMenuButton-member.Id" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
-                                                <img src="~/images/action dots.jpg" alt="action icon" />
-                                            </button>
-
-                                            <ul class="dropdown-menu dropdown-menu-start"
-                                                aria-labelledby="dropdownMenuButton-member.Id">
-                                                <li>
-                                                    <a asp-controller="Member" asp-action="MemberDetails" asp-route-id="@member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3">
-                                                        <img src="~/images/info 1.jpg" alt="info icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>View Member Data</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a asp-controller="Member" asp-action="HealthRecordDetails" asp-route-id="@member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3">
-                                                        <img src="~/images/info 1.jpg" alt="info icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>View Health Record Data</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
-                                                <li>
-                                                    <a asp-controller="Member" asp-action="EditMember" asp-route-id="@member.Id"
-                                                       class="dropdown-item d-flex align-items-center gap-3">
-                                                        <img src="~/images/edit.jpg" alt="edit icon"
-                                                             style="width: 20px; height: 20px;" />
-                                                        <span>Edit Member Data</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <hr class="dropdown-divider">
-                                                </li>
+                                    @if (!string.IsNullOrEmpty(member.Photo))
+                                    {
+                                        <img src="@Url.Action("Picture", "Member", new { id = member.Id })"
+                                             alt="@member.Name"
+                                             class="rounded-circle"
+                                             style="width: 50px; height: 50px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/default-avatar.png"
+                                             alt="@member.Name"
+                                             class="rounded-circle"
+                                             style="width: 50px; height: 50px;" />
+                                    }
+                                </span>
+                            </td>
+                            <td><span>@member.Name</span></td>
+                            <td><span>@member.Email</span></td>
+                            <td><span>@member.Gender</span></td>
+                            <td><span>@member.Phone</span></td>
+                            <td class="action position-relative">
+                                <div class="dropdown">
+                                    <button class="btn btn-link p-0 border-0" type="button" id="dropdownMenuButton-@member.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="~/images/action dots.jpg" alt="action icon" />
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="dropdownMenuButton-@member.Id">
                                         <li>
-                                            <a asp-controller="Member" asp-action="DeleteMember" asp-route-id="@member.Id"
-                                               class="dropdown-item d-flex align-items-center gap-3 text-danger">
-                                                <img src="~/images/x-circle 1.jpg" alt="delete icon"
-                                                     style="width: 20px; height: 20px;" />
+                                            <a asp-controller="Member" asp-action="MemberDetails" asp-route-Id="@member.Id" class="dropdown-item d-flex align-items-center gap-3">
+                                                <img src="~/images/info 1.jpg" alt="info icon" style="width: 20px; height: 20px;" />
+                                                <span>View Member Data</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="Member" asp-action="HealthRecordDetails" asp-route-Id="@member.Id" class="dropdown-item d-flex align-items-center gap-3">
+                                                <img src="~/images/info 1.jpg" alt="info icon" style="width: 20px; height: 20px;" />
+                                                <span>View Health Record Data</span>
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a asp-controller="Member" asp-action="EditMember" asp-route-Id="@member.Id" class="dropdown-item d-flex align-items-center gap-3">
+                                                <img src="~/images/edit.jpg" alt="edit icon" style="width: 20px; height: 20px;" />
+                                                <span>Edit Member Data</span>
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a asp-controller="Member" asp-action="DeleteMember" asp-route-Id="@member.Id" class="dropdown-item d-flex align-items-center gap-3 text-danger">
+                                                <img src="~/images/x-circle 1.jpg" alt="delete icon" style="width: 20px; height: 20px;" />
                                                 <span>Delete</span>
                                             </a>
                                         </li>
-                                            </ul>
-
-
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            }
-                       
-                    </tbody>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
                 </table>
             </div>
             }
