@@ -1,4 +1,5 @@
-﻿using GymSystem.BLL.Common;
+﻿using AutoMapper;
+using GymSystem.BLL.Common;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.MembershipViewModels;
 using GymSystem.DAL.Entities;
@@ -11,10 +12,14 @@ namespace GymSystem.BLL.Services.Classes
     public class MembershipService : IMembershipService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-    public MembershipService(IUnitOfWork unitOfWork)
+
+        public MembershipService(IUnitOfWork unitOfWork,IMapper mapper)
     {
         this.unitOfWork = unitOfWork;
+        this.mapper = mapper;
+
     }
     public async Task<Result> CreateMembershipAsync(CreateMembershipViewModel model, CancellationToken ct = default)
         {
@@ -61,17 +66,11 @@ namespace GymSystem.BLL.Services.Classes
         {
             var memberships = await unitOfWork.MembershipRepository.GetAllMembershipsWithMemberAndPlanAsync(ct: ct);
 
-            return memberships.Select(m => new MembershipViewModel
-            {
-                Id = m.Id,
-                MemberName = m.Member.Name!,
-                PlanName = m.Plan.Name!,
-                StartDate = m.CreatedAt,
-                EndDate = m.EndDate,
-                Status = m.EndDate > DateTime.Now ? "Active" : "Expired"
-            });
-
+            return memberships.Select(m => mapper.Map<MembershipViewModel>(m));
         }
+              
+
+        
 
 
         public async Task<IEnumerable<Plan>> GetPlansForDropDownAsync(CancellationToken ct = default)

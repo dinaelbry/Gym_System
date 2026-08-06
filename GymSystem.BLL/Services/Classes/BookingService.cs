@@ -1,7 +1,10 @@
-﻿using GymSystem.BLL.Common;
+﻿using AutoMapper;
+using GymSystem.BLL.Common;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.BookingViewModels;
 using GymSystem.BLL.ViewModels.MembershipViewModels;
+using GymSystem.BLL.ViewModels.SessionViewModels;
+using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,61 +14,133 @@ using System.Threading.Tasks;
 
 namespace GymSystem.BLL.Services.Classes
 {
-    public class BookingService: IBookingService
+    public class BookingService : IBookingService
     {
-        private readonly IUnitOfWork unitOfWork;
-        public BookingService(IUnitOfWork unitOfWork)
+
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        //public async Task<Result> CancelBookingAsync(int memberId, int sessionId, CancellationToken ct = default)
-        //{
-        //    var session = await unitOfWork.SessionRepository.GetById(sessionId);
-        //    if (session is null)
-        //    {
-        //        return Result.NotFound("Session not found.");
-        //    }
-
-        //    if (session.StartDate <= DateTime.Now)
-        //    {
-        //        return Result.Fail("Cannot cancel booking for a session that has already started.");
-        //    }
-
-        //    var booking = await unitOfWork.BookingRepository.FirstOrDefaultAsync(b => b.SessionId == sessionId && b.MemberId == memberId, tracking: true, ct: ct);
-        //    if (booking is null)
-        //    {
-        //        return Result.NotFound("Booking not found.");
-        //    }
-        //    unitOfWork.BookingRepository.Delete(booking);
-        //    var result = await unitOfWork.SaveChangesAsync(ct);
-        //    return result > 0 ? Result.Ok() : Result.Fail("Failed to cancel booking.");
-
-        //}
-
-        public Task<Result> CreateNewBookingAsync(CreateBookingViewModel model, CancellationToken ct = default)
+        public async Task<Result> CancelBookingAsync(int memberId, int sessionId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var session = await _unitOfWork.SessionRepository.GetById(sessionId, ct);
+            if (session is null) return Result.NotFound("Session not found.");
+
+            if (session.StartDate <= DateTime.Now)
+                return Result.Fail("Cannot cancel a booking for a session that has already started.");
+
+            var booking = await _unitOfWork.BookingRepository.FirstOrDefaultAsync(b => b.SessionId == sessionId && b.MemberId == memberId, isTracked: true, ct: ct);
+            if (booking is null) return Result.NotFound("Booking not found.");
+
+            _unitOfWork.BookingRepository.Delete(booking);
+            var result = await _unitOfWork.CompleteAsync(ct);
+            return result > 0 ? Result.Ok() : Result.Fail("Booking Cancel Failed");
         }
 
-        public Task<IEnumerable<MemberSelectListViewModel>> GetMembersForDropDownAsync(int sessionId, CancellationToken ct = default)
+        public async Task<Result> MarkAttendedAsync(int memberId, int sessionId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var booking = await _unitOfWork.BookingRepository.FirstOrDefaultAsync(b => b.MemberId == memberId && b.SessionId == sessionId, isTracked: true, ct: ct);
+            if (booking is null) return Result.NotFound("Booking not found.");
+
+            booking.IsAttended = true;
+            booking.UpdatedAt = DateTime.Now;
+            _unitOfWork.BookingRepository.Update(booking);
+
+            var result = await _unitOfWork.CompleteAsync(ct);
+            return result > 0 ? Result.Ok() : Result.Fail("Failed to Mark As Attended");
         }
 
-        public Task<IEnumerable<MemberForSessionViewModel>> GetMembersForOngoingBySessionIdAsync(int sessionId, CancellationToken ct = default)
+        public async Task<Result> CreateNewBookingAsync(CreateBookingViewModel model, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var session = await _unitOfWork.SessionRepository.GetById(model.SessionId, ct);
+            if (session is null) return Result.NotFound("Session not found.");
+
+            if (session.StartDate <= DateTime.Now)
+                return Result.Fail("Cannot book a session that has already started.");
+
+            var hasActiveMembership = await _unitOfWork.MembershipRepository
+                .Any(m => m.MemberId == model.MemberId && m.EndDate > DateTime.Now, ct);
+            if (!hasActiveMembership)
+                return Result.Fail("Member does not have an active membership.");
+
+            // Prevent double-booking the same member into the same session.
+            var alreadyBooked = await _unitOfWork.BookingRepository.Any(b => b.SessionId == model.SessionId && b.MemberId == model.MemberId, ct);
+            if (alreadyBooked)
+                return Result.Fail("Member is already booked for this session.");
+
+            var booked = await _unitOfWork.SessionRepository.GetCountOfBookedSlotsAsync(model.SessionId, ct);
+            if (booked >= session.Capacity)
+                return Result.Fail("Session is full.");
+
+            _unitOfWork.BookingRepository.Add(new Booking
+            {
+                MemberId = model.MemberId,
+                SessionId = model.SessionId,
+                IsAttended = false,
+                CreatedAt = DateTime.Now,
+            });
+
+            var result = await _unitOfWork.CompleteAsync(ct);
+            return result > 0 ? Result.Ok() : Result.Fail("Failed To Book Session");
         }
 
-        public Task<IEnumerable<MemberForSessionViewModel>> GetMembersForUpcomingBySessionIdAsync(int sessionId, CancellationToken ct = default)
+        public async Task<IEnumerable<SessionViewModel>> GetAllSessionsAsync(CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var bookings = await _unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync(x => x.EndDate >= DateTime.Now);
+            if (!bookings.Any()) return null!;
+            var MappedSession = _mapper.Map<IEnumerable<SessionViewModel>>(bookings);
+            foreach (var item in MappedSession)
+            {
+                item.AvailableSlots = item.Capacity - await _unitOfWork.SessionRepository.GetCountOfBookedSlotsAsync(item.Id);
+            }
+            return MappedSession;
         }
 
-        public Task<Result> MarkAttendedAsync(int memberId, int sessionId, CancellationToken ct = default)
+        public async Task<IEnumerable<MemberSelectListViewModel>> GetMembersForDropDownAsync(int sessionId, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var allBookings = await _unitOfWork.BookingRepository.GetAll(false, ct);
+            var bookedMemberIds = allBookings.Where(x => x.SessionId == sessionId).Select(x => x.MemberId);
+
+            var allMembers = await _unitOfWork.GetRepository<Member>().GetAll(false, ct);
+            var availableMembers = allMembers.Where(x => !bookedMemberIds.Contains(x.Id));
+
+            return _mapper.Map<IEnumerable<MemberSelectListViewModel>>(availableMembers);
+        }
+
+        public async Task<IEnumerable<MemberForSessionViewModel>> GetMembersForOngoingBySessionIdAsync(int sessionId, CancellationToken ct = default)
+       
+        {
+                var bookings = await _unitOfWork.BookingRepository.GetBySessionIdAsync(sessionId, ct);
+                return bookings.Select(b => new MemberForSessionViewModel
+                {
+                    MemberId = b.MemberId,
+                    SessionId = sessionId,
+                    MemberName = b.Member.Name,
+                    BookingDate = b.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+                    IsAttended = b.IsAttended,
+                }).ToList();
+            
+        }
+
+        public async Task<IEnumerable<MemberForSessionViewModel>> GetMembersForUpcomingBySessionIdAsync(int sessionId, CancellationToken ct = default)
+        {
+            var bookings = await _unitOfWork.BookingRepository.GetBySessionIdAsync(sessionId, ct);
+            return bookings.Select(b => new MemberForSessionViewModel
+            {
+                    MemberId = b.MemberId,
+                    SessionId = sessionId,
+                    MemberName = b.Member.Name,
+                    BookingDate = b.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
+                }).ToList();
+            }
+
+
         }
     }
-}
+
+

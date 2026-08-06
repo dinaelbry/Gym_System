@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GymSystem.DAL.Entities;
+using System.Linq.Expressions;
 
 namespace GymSystem.DAL.Repository.Interfaces
 {
-    internal interface ISessionRepository
+    public interface ISessionRepository: IGenericRepository<Session>
     {
+        Task<IEnumerable<Session>> GetAllSessionsWithTrainerAndCategoryAsync(Expression<Func<Session, bool>>? predicate = null, CancellationToken ct = default);
+
+        Task<Session?> GetSessionWithTrainerAndCategoryAsync(int sessionId, CancellationToken ct = default);
+
+        Task<int> GetCountOfBookedSlotsAsync(int sessionId, CancellationToken ct = default);
     }
 }
