@@ -1,11 +1,17 @@
-using GymSystem.BLL.Services.Classes;
+using GymSystem.BLL.Mapping;
 using GymSystem.BLL.Services.Attachment;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.DAL.Data.Contexts;
 using GymSystem.DAL.Repository.Classes;
 using GymSystem.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using GymManagementBLL.Services.Classes;
+using GymSystem.DAL.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.DependencyInjection;
+using GymSystem.BLL.Services.Classes;
+
+
 namespace GymSystem
 {
     public class Program
@@ -22,15 +28,26 @@ namespace GymSystem
 
 
             // Repos
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+
 
             // Services
             builder.Services.AddScoped<IMemberServices, MemberServices>();
-            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
-            builder.Services.AddScoped<IPlanService,PlanService>();
+            builder.Services.AddScoped<ITrainerService, TrainerService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
+            builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IMembershipService, MembershipService>();
+            builder.Services.AddScoped<IHomeStateService, HomeStateService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+
+
 
             var app = builder.Build();
 

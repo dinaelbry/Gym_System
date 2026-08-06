@@ -33,7 +33,7 @@ namespace GymSystem.Controllers
                     .Select(ms => ms.MemberId)
                     .Distinct()
                     .Count(),
-                TrainersCount = trainers.Count(),
+                TotalTrainers = trainers.Count(),
                 UpcomingSessions = sessions.Count(s => s.StartDate > now),
                 OngoingSessions = sessions.Count(s => s.StartDate <= now && s.EndDate >= now),
                 CompletedSessions = sessions.Count(s => s.EndDate < now)
