@@ -1,5 +1,5 @@
 ﻿
-using GymSystem.BLL.ViewModels.AnalyticsViewModels;
+using GymSystem.BLL.ViewModels.HomeViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace GymSystem.BLL.Services.Interfaces
 {
-    public interface IAnalyticsService
+    public interface IHomeStateService
     {
-        Task<AnalyticsViewModel> GetAnalyticsDataAsync(CancellationToken ct = default);
+        Task<HomeStatsViewModel> GetStatesDataAsync(CancellationToken ct = default);
     }
 }

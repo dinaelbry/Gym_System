@@ -1,20 +1,22 @@
-﻿using GymSystem.BLL.Common;
+﻿using AutoMapper;
+using GymSystem.BLL.Common;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.PlanViewModels;
 using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Interfaces;
 
-namespace GymManagementBLL.Services.Classes
+namespace GymSystem.BLL.Services.Classes
 {
     public class PlanService : IPlanService
     {
         private readonly IUnitOfWork _unitOfWork;
-        
+        private readonly IMapper mapper;
 
-        public PlanService(IUnitOfWork unitOfWork)
+
+        public PlanService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
-          
+            this.mapper = mapper;
         }
 
         public async Task<IEnumerable<PlanViewModel>> GetAllPlansAsync(CancellationToken ct = default)

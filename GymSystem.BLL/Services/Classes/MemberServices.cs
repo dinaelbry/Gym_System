@@ -1,4 +1,5 @@
-﻿using GymSystem.BLL.Services.Attachment;
+﻿using AutoMapper;
+using GymSystem.BLL.Services.Attachment;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.MembersViewModels;
 using GymSystem.DAL.Entities;
@@ -12,11 +13,13 @@ namespace GymSystem.BLL.Services.Classes
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IAttachmentService attachmentService;
-        public MemberServices(IUnitOfWork unitOfWork, IAttachmentService attachmentService)
+        private readonly IMapper mapper;
+        public MemberServices(IUnitOfWork unitOfWork, IAttachmentService attachmentService, IMapper mapper)
              
         {
             this.unitOfWork = unitOfWork;
             this.attachmentService = attachmentService;
+            this.mapper = mapper;
         }
 
         //get

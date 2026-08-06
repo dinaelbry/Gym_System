@@ -1,20 +1,23 @@
-﻿using GymSystem.BLL.Services.Interfaces;
-using GymSystem.BLL.ViewModels.AnalyticsViewModels;
+﻿using AutoMapper;
+using GymSystem.BLL.Services.Interfaces;
+using GymSystem.BLL.ViewModels.HomeViewModels;
 using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Interfaces;
 
 namespace GymSystem.BLL.Services.Classes
 {
-    public class AnalyticsService : IAnalyticsService
+    public class HomeStateService : IHomeStateService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public AnalyticsService(IUnitOfWork unitOfWork)
+        public HomeStateService(IUnitOfWork unitOfWork,IMapper mapper)
         {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
         }
 
-        public async Task<AnalyticsViewModel> GetAnalyticsDataAsync(CancellationToken ct = default)
+        public async Task<HomeStatsViewModel> GetStatesDataAsync(CancellationToken ct = default)
         {
             var now = DateTime.Now;
             var upcomingSessions = await unitOfWork.GetRepository<Session>().CountAsync(s => s.StartDate > now);
@@ -23,7 +26,7 @@ namespace GymSystem.BLL.Services.Classes
             var totalMembers = await unitOfWork.GetRepository<Member>().CountAsync(ct: ct);
             var totalTrainers = await unitOfWork.GetRepository<Trainer>().CountAsync(ct: ct);
             var activeMembers = await unitOfWork.GetRepository<MemberShip>().CountAsync(m => m.EndDate > now, ct);
-            return new AnalyticsViewModel()
+            return new HomeStatsViewModel()
             {
                 TotalMembers = totalMembers,
                 TotalTrainers = totalTrainers,
