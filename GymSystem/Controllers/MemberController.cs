@@ -9,17 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystem.Controllers
 {
-    public class MemberController : Controller
+    [Authorize(Roles = "SuperAdmin")]
+    public class MemberController(IMemberServices memberServices, IAttachmentService attachmentService) : Controller
     {
-        private readonly IMemberServices _memberServices;
-        private readonly IAttachmentService _attachmentService;
-
-
-        public MemberController(IMemberServices memberServices, IAttachmentService attachmentService)
-        {
-            _memberServices = memberServices;
-            _attachmentService = attachmentService;
-        }
+        private readonly IMemberServices _memberServices = memberServices;
+        private readonly IAttachmentService _attachmentService = attachmentService;
 
         public async Task<IActionResult> Index(CancellationToken ct)
         {
@@ -39,13 +33,14 @@ namespace GymSystem.Controllers
 
            var result=  await _memberServices.CreateMemberAsync(model, ct);
             if (result)
+            {
                 TempData["SuccessMessage"] = "Member created successfully.";
-            else
-                TempData["ErrorMessage"] = result;
+                return RedirectToAction(nameof(Index));
+            }
 
-            return RedirectToAction(nameof(Index));
-            
-            
+            TempData["ErrorMessage"] = "Failed to create member. Email or phone number may already be in use.";
+            return View(nameof(Create), model);
+
         }
 
         public async Task<IActionResult> Picture(int id)
