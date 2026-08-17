@@ -41,7 +41,7 @@ namespace GymSystem.BLL.Services.Attachment
 
             try
             {
-                using var fs = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write);
+              await using var fs = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write, FileShare.None);
                 await fileStream.CopyToAsync(fs, ct);
                 return storedFileName;
             }
@@ -59,7 +59,7 @@ namespace GymSystem.BLL.Services.Attachment
 
             try
             {
-                var fullPath = Path.Combine(_env.WebRootPath, folderName, fileName);
+                var fullPath = Path.Combine(_env.ContentRootPath, folderName, fileName);
 
                 if (!File.Exists(fullPath)) return false;
                 File.Delete(fullPath);

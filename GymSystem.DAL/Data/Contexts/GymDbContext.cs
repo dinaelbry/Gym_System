@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using GymSystem.DAL.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace GymSystem.DAL.Data.Contexts
 {
-    public class GymDbContext:DbContext
+    public class GymDbContext: IdentityDbContext<ApplicationUser>
     {
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -22,9 +23,9 @@ namespace GymSystem.DAL.Data.Contexts
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-           
         }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Trainer> Trainers { get; set; }

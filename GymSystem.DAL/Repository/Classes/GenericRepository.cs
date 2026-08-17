@@ -48,5 +48,7 @@ namespace GymSystem.DAL.Repository.Classes
 
         public Task<int> CountAsync(Expression<Func<TEntity, bool>>? predicate = null, CancellationToken ct = default)
             => predicate is null ? _set.AsNoTracking().CountAsync(ct) : _set.AsNoTracking().CountAsync(predicate, ct);
+
+       
     }
 }

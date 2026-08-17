@@ -5,14 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystem.Controllers
 {
-    public class TrainerController : Controller
+    [Authorize]
+    public class TrainerController(ITrainerService trainerService) : Controller
     {
-        private readonly ITrainerService _trainerService;
-
-        public TrainerController(ITrainerService trainerService)
-        {
-            _trainerService = trainerService;
-        }
+        private readonly ITrainerService _trainerService = trainerService;
 
         public async Task<IActionResult> Index(CancellationToken ct)
         {
@@ -26,6 +22,7 @@ namespace GymSystem.Controllers
             return View();
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateTrainerViewModel model, CancellationToken ct)
         {

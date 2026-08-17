@@ -4,6 +4,7 @@ using GymSystem.DAL.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymSystem.DAL.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    partial class GymDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260813143931_AddIdentityTables")]
+    partial class AddIdentityTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -119,7 +122,7 @@ namespace GymSystem.DAL.Migrations
 
                     b.HasIndex("MemberId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("GymSystem.DAL.Entities.Category", b =>
@@ -145,7 +148,7 @@ namespace GymSystem.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -219,7 +222,7 @@ namespace GymSystem.DAL.Migrations
                     b.HasIndex("MemberId")
                         .IsUnique();
 
-                    b.ToTable("HealthRecords", (string)null);
+                    b.ToTable("HealthRecords");
                 });
 
             modelBuilder.Entity("GymSystem.DAL.Entities.Member", b =>
@@ -271,7 +274,7 @@ namespace GymSystem.DAL.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
-                    b.ToTable("Members", null, t =>
+                    b.ToTable("Members", t =>
                         {
                             t.HasCheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'");
 
@@ -311,7 +314,7 @@ namespace GymSystem.DAL.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("Memberships", (string)null);
+                    b.ToTable("Memberships");
                 });
 
             modelBuilder.Entity("GymSystem.DAL.Entities.Plan", b =>
@@ -354,7 +357,7 @@ namespace GymSystem.DAL.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Plans", null, t =>
+                    b.ToTable("Plans", t =>
                         {
                             t.HasCheckConstraint("DurationCheckValue", "Duration Between 1 and 365");
                         });
@@ -399,7 +402,7 @@ namespace GymSystem.DAL.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Sessions", null, t =>
+                    b.ToTable("Sessions", t =>
                         {
                             t.HasCheckConstraint("SessionCapacityCheck", "Capacity between 1 and 25");
 
@@ -459,7 +462,7 @@ namespace GymSystem.DAL.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
-                    b.ToTable("Trainers", null, t =>
+                    b.ToTable("Trainers", t =>
                         {
                             t.HasCheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'")
                                 .HasName("EmailCheck1");
@@ -657,7 +660,7 @@ namespace GymSystem.DAL.Migrations
 
                             b1.HasKey("MemberId");
 
-                            b1.ToTable("Members", (string)null);
+                            b1.ToTable("Members");
 
                             b1.WithOwner()
                                 .HasForeignKey("MemberId");
@@ -739,7 +742,7 @@ namespace GymSystem.DAL.Migrations
 
                             b1.HasKey("TrainerId");
 
-                            b1.ToTable("Trainers", (string)null);
+                            b1.ToTable("Trainers");
 
                             b1.WithOwner()
                                 .HasForeignKey("TrainerId");

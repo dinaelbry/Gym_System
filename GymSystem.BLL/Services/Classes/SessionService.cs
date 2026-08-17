@@ -9,20 +9,27 @@ using GymSystem.DAL.Repository.Interfaces;
 
 namespace GymSystem.BLL.Services.Classes
 {
-    public class SessionService(IUnitOfWork unitOfWork, IMapper mapper) : ISessionService
+    public class SessionService : ISessionService
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IMapper _mapper = mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public SessionService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
 
         public async Task<IEnumerable<SessionViewModel>?> GetAllSessionsAsync(CancellationToken ct = default)
         {
             var sessions = await _unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync(ct: ct);
-
-
             if (sessions?.Any() != true) return null;
 
             sessions = sessions.OrderByDescending(X => X.StartDate);
-            var MappedSessions = _mapper.Map<IEnumerable<SessionViewModel>>(sessions);
+
+
+            var MappedSessions = _mapper.Map<IEnumerable<Session>, IEnumerable<SessionViewModel>>(sessions);
 
             foreach (var session in MappedSessions)
             {
@@ -47,7 +54,7 @@ namespace GymSystem.BLL.Services.Classes
             var session = await _unitOfWork.GetRepository<Session>().GetById(sessionId, ct);
             if (session is null) return null;
             if (!await IsSessionValidForUpdatingAsync(session, ct)) return null;
-            return _mapper.Map<UpdateSessionViewModel>(session);
+            return _mapper.Map<Session,UpdateSessionViewModel>(session);
         }
         public async Task<Result> CreateSessionAsync(CreateSessionViewModel model, CancellationToken ct = default)
         {
@@ -58,36 +65,27 @@ namespace GymSystem.BLL.Services.Classes
                 return Result.Validation("Start date must be in the future.");
 
             var trainerRepo = _unitOfWork.GetRepository<Trainer>();
-
             var trainer = await trainerRepo.GetById(model.TrainerId, ct);
-
             if (trainer is null)
                 return Result.NotFound("Trainer not found.");
 
             var categoryRepo = _unitOfWork.GetRepository<Category>();
             var category = await categoryRepo.GetById(model.CategoryId, ct);
-
             if (category is null)
                 return Result.NotFound("Category not found.");
 
             var isValidSpecialty = Enum.TryParse<Specialties>(category.CategoryName, true, out var categorySpecialty);
-
             if (!isValidSpecialty || trainer.Specialize != categorySpecialty)
                 return Result.Validation("Cannot create this session for this trainer.");
 
-            var session = _mapper.Map<Session>(model);
-
+            var session = _mapper.Map<CreateSessionViewModel, Session>(model);
             var sessionRepo = _unitOfWork.GetRepository<Session>();
-            sessionRepo.Add(session);
+            sessionRepo.Add(session, ct);
 
             var affectedRows = await _unitOfWork.CompleteAsync(ct);
-
             return affectedRows > 0 ? Result.Ok() : Result.Fail("Failed to create session.");
         }
-        public async Task<Result> UpdateSessionAsync(
-       int id,
-       UpdateSessionViewModel model,
-       CancellationToken ct = default)
+        public async Task<Result> UpdateSessionAsync( int id,UpdateSessionViewModel model, CancellationToken ct = default)
         {
             var sessionRepo = _unitOfWork.GetRepository<Session>();
             var session = await sessionRepo.GetById(id, ct);
@@ -107,11 +105,9 @@ namespace GymSystem.BLL.Services.Classes
                 return Result.Validation("End date must be after start date.");
 
             if (model.StartDate <= DateTime.Now)
-                return Result.Validation(
-                    "Start date must be in the future.");
+                return Result.Validation("Start date must be in the future.");
 
             var trainerRepo = _unitOfWork.GetRepository<Trainer>();
-
             var trainer = await trainerRepo.GetById(model.TrainerId, ct);
 
             if (trainer is null)
@@ -134,7 +130,7 @@ namespace GymSystem.BLL.Services.Classes
 
             session.UpdatedAt = DateTime.Now;
 
-            sessionRepo.Update(session);
+            sessionRepo.Update(session, ct);
 
             var affectedRows = await _unitOfWork.CompleteAsync(ct);
 
@@ -153,7 +149,7 @@ namespace GymSystem.BLL.Services.Classes
             if (bookedCount > 0)
                 return Result.Fail("Cannot delete a session that has bookings.");
 
-            repo.Delete(session);
+            repo.Delete(session, ct);
             var affectedRows = await _unitOfWork.CompleteAsync(ct);
 
             return affectedRows > 0 ? Result.Ok() : Result.Fail("Failed to Delete session.");
@@ -161,13 +157,13 @@ namespace GymSystem.BLL.Services.Classes
         public async Task<IEnumerable<TrainerSelectViewModel>> GetTrainersForDropDownAsync(CancellationToken ct = default)
         {
             var trainers = await _unitOfWork.GetRepository<Trainer>().GetAll(false,ct);
-            return _mapper.Map<IEnumerable<TrainerSelectViewModel>>(trainers);
+            return _mapper.Map<IEnumerable<Trainer>,IEnumerable<TrainerSelectViewModel>>(trainers);
         }
 
         public async Task<IEnumerable<CategorySelectViewModel>> GetCategoriesForDropDownAsync(CancellationToken ct = default)
         {
             var categories = await _unitOfWork.GetRepository<Category>().GetAll(false,ct);
-            return _mapper.Map<List<CategorySelectViewModel>>(categories); ;
+            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategorySelectViewModel>>(categories);
         }
 
 

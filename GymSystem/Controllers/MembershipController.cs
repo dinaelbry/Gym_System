@@ -1,5 +1,6 @@
 ﻿using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.MembershipViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymSystem.Controllers
 {
+    [Authorize]
+
     public class MembershipController : Controller
     {
         private readonly IMembershipService _membershipService;

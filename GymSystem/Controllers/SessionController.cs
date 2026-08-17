@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymSystem.Controllers
 {
+    [Authorize]
+
     public class SessionController : Controller
     {
         private readonly ISessionService _sessionService;
@@ -16,8 +18,10 @@ namespace GymSystem.Controllers
         }
 
         public async Task<IActionResult> Index(CancellationToken ct)
-            => View(await _sessionService.GetAllSessionsAsync(ct));
-
+        {
+            var sessions = await _sessionService.GetAllSessionsAsync(ct);
+            return View(sessions);
+        }
         [HttpGet]
         public async Task<IActionResult> Create(CancellationToken ct)
         {
@@ -106,8 +110,7 @@ namespace GymSystem.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
         {
             var result = await _sessionService.DeleteSessionAsync(id, ct);
-            TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] =
-                result.Success ? "Session deleted successfully." : result.Error;
+            TempData[result.Success ? "SuccessMessage" : "ErrorMessage"] = result.Success ? "Session deleted successfully." : result.Error;
             return RedirectToAction(nameof(Index));
         }
 

@@ -1,44 +1,33 @@
+using GymSystem.BLL.Services.Interfaces;
 using GymSystem.BLL.ViewModels.HomeViewModels;
 using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Classes;
 using GymSystem.DAL.Repository.Interfaces;
+using GymSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace GymSystem.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private readonly IUnitOfWork UnitOfWork;
-
-        public HomeController(IUnitOfWork UnitOfWork) 
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IHomeStateService _homeStateService;
+        private readonly ILogger<HomeController> _logger;
+        public HomeController(ILogger<HomeController> logger, IHomeStateService homeStateService, IUnitOfWork unitOfWork)
         {
-            this.UnitOfWork = UnitOfWork;
+            _unitOfWork = unitOfWork;
+            _homeStateService = homeStateService;
+            _logger = logger;
         }
 
 
         public async Task<IActionResult> Index(CancellationToken ct)
         {
-            var now = DateTime.Now;
-
-            var members = await UnitOfWork.GetRepository<Member>().GetAll(false, ct);
-            var trainers = await UnitOfWork.GetRepository<Trainer>().GetAll(false, ct);
-            var memberShips = await UnitOfWork.GetRepository<MemberShip>().GetAll(false, ct);
-            var sessions = await UnitOfWork.GetRepository<Session>().GetAll(false, ct);
-
-            var model = new HomeStatsViewModel
-            {
-                TotalMembers = members.Count(),
-                ActiveMembers = memberShips
-                    .Where(ms => ms.EndDate > now)
-                    .Select(ms => ms.MemberId)
-                    .Distinct()
-                    .Count(),
-                TotalTrainers = trainers.Count(),
-                UpcomingSessions = sessions.Count(s => s.StartDate > now),
-                OngoingSessions = sessions.Count(s => s.StartDate <= now && s.EndDate >= now),
-                CompletedSessions = sessions.Count(s => s.EndDate < now)
-            };
-            return View(model);
+            var Data = await _homeStateService.GetStatesDataAsync(ct);
+            return View(Data);
 
         }
 
@@ -47,6 +36,12 @@ namespace GymSystem.Controllers
             return View();
         }
 
-       
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+
+        }
     }
 }

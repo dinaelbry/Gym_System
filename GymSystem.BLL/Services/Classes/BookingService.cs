@@ -6,25 +6,26 @@ using GymSystem.BLL.ViewModels.MembershipViewModels;
 using GymSystem.BLL.ViewModels.SessionViewModels;
 using GymSystem.DAL.Entities;
 using GymSystem.DAL.Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace GymSystem.BLL.Services.Classes
 {
+    using Member = GymSystem.DAL.Entities.Member;
+
+
     public class BookingService : IBookingService
     {
 
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork ;
+        private readonly IMapper _mapper ;
+
+       public BookingService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
 
         public async Task<Result> CancelBookingAsync(int memberId, int sessionId, CancellationToken ct = default)
         {
@@ -37,7 +38,7 @@ namespace GymSystem.BLL.Services.Classes
             var booking = await _unitOfWork.BookingRepository.FirstOrDefaultAsync(b => b.SessionId == sessionId && b.MemberId == memberId, isTracked: true, ct: ct);
             if (booking is null) return Result.NotFound("Booking not found.");
 
-            _unitOfWork.BookingRepository.Delete(booking);
+            _unitOfWork.BookingRepository.Delete(booking, ct);
             var result = await _unitOfWork.CompleteAsync(ct);
             return result > 0 ? Result.Ok() : Result.Fail("Booking Cancel Failed");
         }
@@ -49,7 +50,7 @@ namespace GymSystem.BLL.Services.Classes
 
             booking.IsAttended = true;
             booking.UpdatedAt = DateTime.Now;
-            _unitOfWork.BookingRepository.Update(booking);
+            _unitOfWork.BookingRepository.Update(booking, ct);
 
             var result = await _unitOfWork.CompleteAsync(ct);
             return result > 0 ? Result.Ok() : Result.Fail("Failed to Mark As Attended");
@@ -68,7 +69,7 @@ namespace GymSystem.BLL.Services.Classes
             if (!hasActiveMembership)
                 return Result.Fail("Member does not have an active membership.");
 
-            // Prevent double-booking the same member into the same session.
+            // Prevent double-booking the same member into the same session
             var alreadyBooked = await _unitOfWork.BookingRepository.Any(b => b.SessionId == model.SessionId && b.MemberId == model.MemberId, ct);
             if (alreadyBooked)
                 return Result.Fail("Member is already booked for this session.");
@@ -77,13 +78,10 @@ namespace GymSystem.BLL.Services.Classes
             if (booked >= session.Capacity)
                 return Result.Fail("Session is full.");
 
-            _unitOfWork.BookingRepository.Add(new Booking
-            {
-                MemberId = model.MemberId,
-                SessionId = model.SessionId,
-                IsAttended = false,
-                CreatedAt = DateTime.Now,
-            });
+
+            var booking = _mapper.Map<Booking>(model);
+            _unitOfWork.BookingRepository.Add(booking, ct);
+
 
             var result = await _unitOfWork.CompleteAsync(ct);
             return result > 0 ? Result.Ok() : Result.Fail("Failed To Book Session");
@@ -91,12 +89,12 @@ namespace GymSystem.BLL.Services.Classes
 
         public async Task<IEnumerable<SessionViewModel>> GetAllSessionsAsync(CancellationToken ct)
         {
-            var bookings = await _unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync(x => x.EndDate >= DateTime.Now);
+            var bookings = await _unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync(x => x.EndDate >= DateTime.Now, ct);
             if (!bookings.Any()) return null!;
             var MappedSession = _mapper.Map<IEnumerable<SessionViewModel>>(bookings);
             foreach (var item in MappedSession)
             {
-                item.AvailableSlots = item.Capacity - await _unitOfWork.SessionRepository.GetCountOfBookedSlotsAsync(item.Id);
+                item.AvailableSlots = item.Capacity - await _unitOfWork.SessionRepository.GetCountOfBookedSlotsAsync(item.Id, ct);
             }
             return MappedSession;
         }
@@ -111,36 +109,21 @@ namespace GymSystem.BLL.Services.Classes
 
             return _mapper.Map<IEnumerable<MemberSelectListViewModel>>(availableMembers);
         }
-
         public async Task<IEnumerable<MemberForSessionViewModel>> GetMembersForOngoingBySessionIdAsync(int sessionId, CancellationToken ct = default)
        
         {
-                var bookings = await _unitOfWork.BookingRepository.GetBySessionIdAsync(sessionId, ct);
-                return bookings.Select(b => new MemberForSessionViewModel
-                {
-                    MemberId = b.MemberId,
-                    SessionId = sessionId,
-                    MemberName = b.Member.Name,
-                    BookingDate = b.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
-                    IsAttended = b.IsAttended,
-                }).ToList();
-            
+            var bookings = await _unitOfWork.BookingRepository.GetBySessionIdAsync(sessionId, ct);
+            return _mapper.Map<IEnumerable<MemberForSessionViewModel>>(bookings);
+ 
         }
 
         public async Task<IEnumerable<MemberForSessionViewModel>> GetMembersForUpcomingBySessionIdAsync(int sessionId, CancellationToken ct = default)
         {
             var bookings = await _unitOfWork.BookingRepository.GetBySessionIdAsync(sessionId, ct);
-            return bookings.Select(b => new MemberForSessionViewModel
-            {
-                    MemberId = b.MemberId,
-                    SessionId = sessionId,
-                    MemberName = b.Member.Name,
-                    BookingDate = b.CreatedAt.ToString("yyyy-MM-dd HH:mm"),
-                }).ToList();
-            }
-
-
+            return _mapper.Map<IEnumerable<MemberForSessionViewModel>>(bookings);
         }
+
+      }
     }
 
 

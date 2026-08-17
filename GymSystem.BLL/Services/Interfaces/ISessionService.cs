@@ -19,4 +19,4 @@ namespace GymSystem.BLL.Services.Interfaces
         Task<IEnumerable<TrainerSelectViewModel>> GetTrainersForDropDownAsync(CancellationToken ct = default);
         Task<IEnumerable<CategorySelectViewModel>> GetCategoriesForDropDownAsync(CancellationToken ct = default);
     }
-}
+} 

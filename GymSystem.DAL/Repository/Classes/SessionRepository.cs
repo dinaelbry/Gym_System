@@ -13,7 +13,7 @@ namespace GymSystem.DAL.Repository.Classes
         public SessionRepository(GymDbContext dbcontext) : base(dbcontext)
         {
             _dbcontext = dbcontext;
-        }
+        }  
 
         public async Task<IEnumerable<Session>> GetAllSessionsWithTrainerAndCategoryAsync(Expression<Func<Session, bool>>? predicate = null, CancellationToken ct = default)
         {

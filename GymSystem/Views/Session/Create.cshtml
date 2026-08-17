@@ -3,6 +3,14 @@
     ViewData["Title"] = "Create Session";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
 <div class="container mt-4">
     <header class="mb-4">

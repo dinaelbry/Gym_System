@@ -1,4 +1,3 @@
-using GymSystem.BLL.Mapping;
 using GymSystem.BLL.Services.Attachment;
 using GymSystem.BLL.Services.Interfaces;
 using GymSystem.DAL.Data.Contexts;
@@ -6,25 +5,29 @@ using GymSystem.DAL.Repository.Classes;
 using GymSystem.DAL.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using GymSystem.DAL.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 using GymSystem.BLL.Services.Classes;
+using GymSystem.BLL.Utilites;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+
 
 
 namespace GymSystem
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-    builder.Services.AddDbContext<GymDbContext>(options => {
+            builder.Services.AddDbContext<GymDbContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-                    });
+             });
+
 
 
             // Repos
@@ -44,12 +47,38 @@ namespace GymSystem
             builder.Services.AddScoped<IHomeStateService, HomeStateService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+
+
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
+
+            // Configure Identity
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+
+                options.User.RequireUniqueEmail = false;
+
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+            }).AddEntityFrameworkStores<GymDbContext>() // enable DI
+                .AddDefaultTokenProviders();
+
+
+            // Configure cookie settings
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
 
 
             var app = builder.Build();
+            await app.MigrationAndSeedAsync();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -64,6 +93,7 @@ namespace GymSystem
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
