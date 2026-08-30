@@ -79,7 +79,9 @@ namespace GymSystem.BLL.Utilites
                      City = src.City,
                      Street = src.Street
                  }))
-                 .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecordViewModel));
+                 .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecordViewModel))
+                      .ForMember(dest => dest.BirthDate, opt => opt.MapFrom(src => src.BirthDate.ToDateTime(TimeOnly.MinValue)));
+
 
             CreateMap<HealthRecordViewModel, HealthRecord>().ReverseMap();
 
@@ -92,6 +94,7 @@ namespace GymSystem.BLL.Utilites
             CreateMap<Member, MemberToUpdateViewModel>()
                 .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.PhotoName, opt => opt.MapFrom(src => src.Photo))
+                .ForMember(dest => dest.Photo, opt => opt.Ignore())
                 .ForMember(dest => dest.BuildingNumber, opt => opt.MapFrom(src => src.Address.BuildingNumber))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street));

@@ -17,12 +17,13 @@ namespace GymSystem.BLL.Services.Interfaces
 
 
         //Post ViewModel=> model=> DB
-        Task<bool> CreateMemberAsync(CreateMemberViewModels model, CancellationToken ct = default);
+
+        Task<(bool Success, string? TemporaryPassword)> CreateMemberAsync(CreateMemberViewModels model, CancellationToken ct = default); // return tuple
         Task<bool> UpdateMemberDetailsAsync(int id,MemberToUpdateViewModel model, CancellationToken ct = default);
         Task<bool> DeleteMemberAsync(int memberId, CancellationToken ct = default);
 
 
-
+        Task<MyAccountViewModel?> GetMyAccountAsync(int memberId, CancellationToken ct = default);
 
 
 

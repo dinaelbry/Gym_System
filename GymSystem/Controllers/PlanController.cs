@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystem.Controllers
 {
-    [Authorize]
-
+    [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
     public class PlanController : Controller
     {
         private readonly IPlanService planService;
@@ -32,6 +31,7 @@ namespace GymSystem.Controllers
             return View(plan);
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, CancellationToken ct)
         {
@@ -46,7 +46,7 @@ namespace GymSystem.Controllers
         }
 
 
-
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, UpdatePlanViewModel model, CancellationToken ct)
         {
@@ -63,6 +63,7 @@ namespace GymSystem.Controllers
         }
 
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> ToggleActive(int id, CancellationToken ct)
         {

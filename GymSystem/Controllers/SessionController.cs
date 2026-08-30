@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GymSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
 
     public class SessionController : Controller
     {
@@ -22,6 +22,8 @@ namespace GymSystem.Controllers
             var sessions = await _sessionService.GetAllSessionsAsync(ct);
             return View(sessions);
         }
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> Create(CancellationToken ct)
         {
@@ -29,6 +31,7 @@ namespace GymSystem.Controllers
             return View();
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateSessionViewModel model, CancellationToken ct)
         {
@@ -61,6 +64,8 @@ namespace GymSystem.Controllers
             return View(session);
         }
 
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, CancellationToken ct)
         {
@@ -74,6 +79,8 @@ namespace GymSystem.Controllers
             return View(session);
         }
 
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, UpdateSessionViewModel model, CancellationToken ct)
         {
@@ -94,6 +101,8 @@ namespace GymSystem.Controllers
             return View(model);
         }
 
+
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
@@ -106,6 +115,7 @@ namespace GymSystem.Controllers
             return View(session);
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
         {

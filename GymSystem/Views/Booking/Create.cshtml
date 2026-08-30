@@ -21,7 +21,7 @@
                         <div class="mb-3">
                             <input type="hidden" asp-for="SessionId" value="@ViewContext.RouteData.Values["id"]" readonly />
                             <label asp-for="MemberId" class="form-label">Member</label>
-                            <select asp-for="MemberId" asp-items="ViewBag.Members" class="form-select">
+                            <select asp-for="MemberId" asp-items="ViewBag.Members" class="form-select" id="MemberId">
                                 <option value="">-- Select Member --</option>
                             </select>
                             <span asp-validation-for="MemberId" class="text-danger"></span>

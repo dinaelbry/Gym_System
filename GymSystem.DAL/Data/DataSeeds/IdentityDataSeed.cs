@@ -22,10 +22,12 @@ namespace GymSystem.DAL.Data.DataSeeds
 
                 if (!HasRoles) 
                 {
-                    var roles = new List<IdentityRole>()
+                     var roles = new List<IdentityRole>()
                     {
                         new IdentityRole { Name = "SuperAdmin" },
                         new IdentityRole { Name = "Admin" },
+                        new IdentityRole {Name = "Receptionist" },
+                        new IdentityRole {Name = "Member"}
                     };
 
                     foreach (var roleName in roles.Select(r => r.Name))
@@ -53,13 +55,19 @@ namespace GymSystem.DAL.Data.DataSeeds
                         PhoneNumber = "01556663526",
                     };
                     var UserResult = await userManager.CreateAsync(Mainusers, "P@ssw0rd");
-                    await userManager.AddToRoleAsync(Mainusers, "SuperAdmin");
 
                     if (!UserResult.Succeeded)
                     {
                         logger.LogError($"Error creating user '{Mainusers.UserName}': {string.Join(", ", UserResult.Errors.Select(e => e.Description))}");
                         return;
                     }
+
+                   var RoleResult = await userManager.AddToRoleAsync(Mainusers, "SuperAdmin");
+                    if (!RoleResult.Succeeded)
+                    {
+                        logger.LogError($"Error assigning role: {string.Join(", ", RoleResult.Errors.Select(e => e.Description))}");
+                    }
+
                 }
                 return;
             }

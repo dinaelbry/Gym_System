@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
     public class TrainerController(ITrainerService trainerService) : Controller
     {
         private readonly ITrainerService _trainerService = trainerService;
@@ -15,7 +15,8 @@ namespace GymSystem.Controllers
             var trainers = await _trainerService.GetAllTrainersAsync(ct);
             return View(trainers);
         }
-
+       
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -65,6 +66,7 @@ namespace GymSystem.Controllers
             return View(trainer);
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, TrainerToUpdateViewModel model, CancellationToken ct)
         {
@@ -80,6 +82,7 @@ namespace GymSystem.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
@@ -92,6 +95,7 @@ namespace GymSystem.Controllers
             return View();
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
         {

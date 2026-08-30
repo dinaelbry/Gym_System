@@ -1,0 +1,98 @@
+﻿@using GymSystem.BLL.ViewModels.MembersViewModels
+@model MyAccountViewModel
+@{
+    ViewData["Title"] = "My Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <!--info -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body p-4 text-center">
+                    <img src="~/images/@Model.Photo" alt="@Model.Name" class="rounded-circle mb-3"
+                         style="width: 100px; height: 100px; object-fit: cover;" />
+                    <h3 class="text-primary-color mb-1">@Model.Name</h3>
+                    <p class="text-muted mb-0">@Model.Email</p>
+                    <p class="text-muted">@Model.Phone</p>
+                    <p class="text-muted small">@Model.Address</p>
+                </div>
+            </div>
+
+            <!-- booking -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-primary-color text-white">
+                    <i class="bi bi-card-checklist me-2"></i>Membership Status
+                </div>
+                <div class="card-body p-4">
+                    @if (Model.HasActiveMembership)
+                    {
+                        <div class="row g-3 text-center">
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Plan</small>
+                                <strong>@Model.PlanName</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Start Date</small>
+                                <strong>@Model.MembershipStartDate</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">End Date</small>
+                                <strong>@Model.MembershipEndDate</strong>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted d-block">Days Remaining</small>
+                                <strong class="@(Model.DaysRemaining <= 7 ? "text-danger" : "text-success")">
+                                    @Model.DaysRemaining days
+                                </strong>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted mb-0">You don't have an active membership.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- sessions -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary-color text-white d-flex justify-content-between">
+                    <span><i class="bi bi-calendar-check me-2"></i>Upcoming Sessions</span>
+                    <span class="badge bg-light text-dark">Attended: @Model.AttendedSessionsCount</span>
+                </div>
+                <div class="card-body p-4">
+                    @if (Model.UpcomingSessions.Any())
+                    {
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Trainer</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var session in Model.UpcomingSessions)
+                                {
+                                    <tr>
+                                        <td>@session.SessionCategory</td>
+                                        <td>@session.TrainerName</td>
+                                        <td>@session.StartDate</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted mb-0">No upcoming sessions booked.</p>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
