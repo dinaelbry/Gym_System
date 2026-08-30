@@ -25,7 +25,13 @@ namespace GymSystem.DAL.Data.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.Member)
+                .WithOne()
+                .HasForeignKey<ApplicationUser>(u => u.MemberId)
+                .OnDelete(DeleteBehavior.SetNull);
 
+            base.OnModelCreating(modelBuilder);
         }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<Trainer> Trainers { get; set; }

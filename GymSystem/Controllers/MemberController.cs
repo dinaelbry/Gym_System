@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymSystem.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
     public class MemberController(IMemberServices memberServices, IAttachmentService attachmentService) : Controller
     {
         private readonly IMemberServices _memberServices = memberServices;
@@ -22,23 +22,31 @@ namespace GymSystem.Controllers
         }
 
         //Action
+        [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
         [HttpGet]
         public IActionResult Create() => View();
 
+
+        [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
         [HttpPost] 
         public async Task<IActionResult> CreateMember(CreateMemberViewModels model, CancellationToken ct)
         {
             if (!ModelState.IsValid)
                 return View(nameof(Create), model);
 
-           var result=  await _memberServices.CreateMemberAsync(model, ct);
-            if (result)
+            var (success, temporaryPassword) =  await _memberServices.CreateMemberAsync(model, ct);
+            if (success)
             {
-                TempData["SuccessMessage"] = "Member created successfully.";
-                return RedirectToAction(nameof(Index));
+                var confirmVm = new MemberCreatedViewModel
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    TemporaryPassword = temporaryPassword!
+                };
+                return View("MemberCreated", confirmVm);
             }
 
-            TempData["ErrorMessage"] = "Failed to create member. Email or phone number may already be in use.";
+            TempData["Failed"] = "Failed to create member. Email or phone number may already be in use.";
             return View(nameof(Create), model);
 
         }
@@ -57,19 +65,20 @@ namespace GymSystem.Controllers
         }
 
 
-
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> EditMember(int id, CancellationToken ct)
         {
             var member = await _memberServices.GetMemberToUpdateAsync(id, ct);
             if (member == null)
             {
-                TempData["ErrorMEssage"] = "Member Not Found";
+                TempData["Failed"] = "Member Not Found";
                 return RedirectToAction(nameof(Index));
             }
             return View(member);
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> EditMember([FromRoute]int id, MemberToUpdateViewModel model, CancellationToken ct)
         {
@@ -80,11 +89,11 @@ namespace GymSystem.Controllers
             var result = await _memberServices.UpdateMemberDetailsAsync(id, model, ct);
             if (result)
             {
-                TempData["SuccessMessage"] = "Member updated successfully.";
+                TempData["Success"] = "Member updated successfully.";
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["ErrorMessage"] = "Failed to update member.";
+            TempData["Failed"] = "Failed to update member.";
             return View(model);
         }
 
@@ -96,7 +105,7 @@ namespace GymSystem.Controllers
             var member = await _memberServices.GetMemberDetailsAsync(id, ct);
             if (member is null)
             {
-                TempData["ErrorMessage"] = "Member Not Found!";
+                TempData["Failed"] = "Member Not Found!";
                 return RedirectToAction(nameof(Index));
             }
             
@@ -108,7 +117,7 @@ namespace GymSystem.Controllers
             var healthrecord = await _memberServices.GetMemberHealthRecordAsync(id, ct);
             if (healthrecord == null)
             {
-                TempData["ErrorMessage"] = "Health Record Not Found!";
+                TempData["Failed"] = "Health Record Not Found!";
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -119,18 +128,20 @@ namespace GymSystem.Controllers
 
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> DeleteMember(int id, CancellationToken ct)
         {
             var member = await _memberServices.GetMemberDetailsAsync(id, ct);
             if (member is null)
             {
-                TempData["ErrorMessage"] = "Member Not Found";
+                TempData["Failed"] = "Member Not Found";
                 return RedirectToAction(nameof(Index));
             }
             return View(member);
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct) 
         {
@@ -141,7 +152,7 @@ namespace GymSystem.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Failed to delete member. Member may have upcoming sessions.";
+                TempData["Failed"] = "Failed to delete member. Member may have upcoming sessions.";
             }
             return RedirectToAction(nameof(Index));
 

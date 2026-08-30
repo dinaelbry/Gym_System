@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 
-
 namespace GymSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "SuperAdmin,Admin,Receptionist")]
 
     public class MembershipController : Controller
     {

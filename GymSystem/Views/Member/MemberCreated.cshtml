@@ -1,0 +1,54 @@
+﻿@model MemberCreatedViewModel
+@{
+    ViewData["Title"] = "Member Created";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 text-center">
+                    <i class="bi bi-check-circle-fill text-success display-3 mb-3"></i>
+                    <h3 class="text-primary-color mb-1">Member Created Successfully</h3>
+                    <p class="text-muted mb-4">@Model.Name</p>
+
+                    <div class="alert alert-warning text-start">
+                        <strong>Important:</strong> Copy these login details now and give them to the member.
+                        This information will not be shown again.
+                    </div>
+
+                    <div class="text-start mb-3">
+                        <label class="form-label fw-semibold">Login Email</label>
+                        <div class="input-group">
+                            <input type="text" id="emailField" class="form-control" value="@Model.Email" readonly />
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyField('emailField')">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-start mb-4">
+                        <label class="form-label fw-semibold">Temporary Password</label>
+                        <div class="input-group">
+                            <input type="text" id="passwordField" class="form-control" value="@Model.TemporaryPassword" readonly />
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyField('passwordField')">
+                                <i class="bi bi-clipboard"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+
+                    <a asp-controller="Member" asp-action="Index" class="btn btn-fill w-100">Back to Members List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyField(id) {
+        const field = document.getElementById(id);
+        field.select();
+        navigator.clipboard.writeText(field.value); // cop
+    }
+</script>
