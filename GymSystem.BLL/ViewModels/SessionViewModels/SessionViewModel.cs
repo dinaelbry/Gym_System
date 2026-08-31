@@ -31,7 +31,7 @@ namespace GymSystem.BLL.ViewModels.SessionViewModels
                 {
                     return "Upcoming";
                 }
-                else if (EndDate <= DateTime.Now && EndDate >= DateTime.Now)
+                else if (StartDate <= DateTime.Now && EndDate >= DateTime.Now)
                 {
                     return "Ongoing";
                 }

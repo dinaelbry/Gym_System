@@ -54,6 +54,7 @@ namespace GymSystem.Controllers
 
         }
 
+        [Authorize(Roles = "SuperAdmin,Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id, CancellationToken ct)
         {
@@ -82,7 +83,7 @@ namespace GymSystem.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "SuperAdmin,Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet]
         public async Task<IActionResult> Delete(int id, CancellationToken ct)
         {
@@ -95,7 +96,7 @@ namespace GymSystem.Controllers
             return View();
         }
 
-        [Authorize(Roles = "SuperAdmin,Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
         {
