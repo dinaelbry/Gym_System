@@ -46,7 +46,6 @@ Built on \*\*ASP.NET Core Identity\*\* with 4 roles, each restricted at the indi
 
 | Role | Access |
 
-|---|---|
 
 | \*\*SuperAdmin\*\* | Full access, including adding and deleting Trainers |
 
