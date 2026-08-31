@@ -170,30 +170,27 @@ namespace GymSystem.BLL.Services.Classes
             return result > 0;
 
         }
-        public async Task<bool> DeleteMemberAsync(int memberId,CancellationToken ct = default)
+        public async Task<bool> DeleteMemberAsync(int memberId, CancellationToken ct = default)
         {
-           var repo = unitOfWork.GetRepository<Member>();
-
+            var repo = unitOfWork.GetRepository<Member>();
             var member = await repo.GetById(memberId, ct);
             if (member is null) return false;
 
-            var hasFutureSessions = await unitOfWork.GetRepository<Booking>().Any(b => b.MemberId == memberId && b.Session.EndDate > DateTime.Now,ct);
+            var hasFutureSessions = await unitOfWork.GetRepository<Booking>().Any(b => b.MemberId == memberId && b.Session.EndDate > DateTime.Now, ct);
             if (hasFutureSessions) return false;
 
+            var hasMemberships = await unitOfWork.GetRepository<MemberShip>().Any(m => m.MemberId == memberId, ct);
+            if (hasMemberships) return false;
 
             if (member.Photo is not null)
                 attachmentService.Delete(member.Photo, "images");
 
-
             repo.Delete(member, ct);
             var result = await unitOfWork.CompleteAsync(ct);
 
-            if (result > 0 ){
-                return true;
-            }
+            if (result > 0) return true;
             return false;
         }
-
         public async Task<MyAccountViewModel?> GetMyAccountAsync(int memberId, CancellationToken ct = default)
         {
             var member = await unitOfWork.GetRepository<Member>().GetById(memberId, ct);
