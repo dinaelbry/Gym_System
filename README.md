@@ -1,117 +1,145 @@
-\# Gym System MVC
+# Gym System MVC
 
+A gym management system built with ASP.NET Core MVC and .NET 9, following an N-Tier Architecture.
 
+This project was developed during my training at Route Academy, with a focus on clean architecture, separation of concerns, design patterns, and real-world business rules.
 
-Gym management system built with \*\*ASP.NET Core MVC\*\* and \*\*.NET 9\*\*, following an \*\*N-Tier Architecture\*\*. Built during training at Route Academy.
+## Architecture
 
+The solution is divided into three independent Class Libraries:
 
+- GymSystem — Presentation Layer
+  - Controllers
+  - Views
 
-\## Architecture
+- GymSystem.BLL — Business Logic Layer
+  - Services
+  - ViewModels
+  - Business rules
 
+- GymSystem.DAL — Data Access Layer
+  - Entities
+  - Repositories
+  - DbContext
 
+## Design Patterns & Practices
 
-The solution is split into 3 independent Class Libraries:
+### Generic Repository Pattern
 
+A generic repository is used for common data access operations, with specialized repositories for specific entities:
 
+- IMembershipRepository
+- ISessionRepository
+- IBookingRepository
 
-\- \*\*GymSystem\*\* (Presentation) — Controllers \& Views
+### Unit of Work
 
-\- \*\*GymSystem.BLL\*\* (Business Logic) — Services \& ViewModels
+The Unit of Work coordinates repository operations and provides access to repositories through:
 
-\- \*\*GymSystem.DAL\*\* (Data Access) — Entities, Repositories \& DbContext
+`GetRepository<TEntity>()`
 
+This keeps database operations organized and helps maintain a single transaction scope.
 
+### AutoMapper
 
-\### Patterns
+AutoMapper is used for Entity ↔ ViewModel mapping.
 
+All mappings are centralized in a single `MappingProfile`.
 
+### Result Pattern
 
-\- \*\*Generic Repository Pattern\*\* with specialized repositories (`IMembershipRepository`, `ISessionRepository`, `IBookingRepository`)
+Create, Update, and Delete operations return a `Result` record instead of a simple `bool`.
 
-\- \*\*Unit of Work\*\* to aggregate repositories via `GetRepository<TEntity>()`
+The result contains:
 
-\- \*\*AutoMapper\*\* for all entity ↔ ViewModel mapping, centralized in a single `MappingProfile`
+- Success
+- Error
+- Kind
 
-\- \*\*Result Pattern\*\* — a `Result` record (`Success`, `Error`, `Kind`) returned from Create/Update/Delete operations instead of a plain `bool`, so failures carry a clear reason
+This allows the application to return meaningful failure reasons and keeps business logic separate from controller logic.
 
+## Authentication & Authorization
 
+The system uses ASP.NET Core Identity with four roles.
 
-\## Roles \& Permissions
-
-
-
-Built on \*\*ASP.NET Core Identity\*\* with 4 roles, each restricted at the individual Action level rather than just the Controller:
-
-
+Authorization is applied at the individual Action level to provide more precise access control.
 
 | Role | Access |
+|------|--------|
+| SuperAdmin | Full access, including adding and deleting Trainers |
+| Admin | Full access except adding or deleting Trainers. Can edit Trainers |
+| Receptionist | Add Members, manage Bookings and Memberships, and view Plans and Sessions |
+| Member | Access to their own account, subscription status, and upcoming sessions |
 
+## Features
 
-| \*\*SuperAdmin\*\* | Full access, including adding and deleting Trainers |
+### Members
 
-| \*\*Admin\*\* | Full access except adding or deleting Trainers (can edit) |
+- Member CRUD operations
+- Profile photo upload
+- Separate health record page
 
-| \*\*Receptionist\*\* | Add Members, manage Bookings \& Memberships, view-only on Plans/Sessions |
+### Trainers
 
-| \*\*Member\*\* | Own account only — subscription status and upcoming sessions via `/MyAccount` |
+- Trainer CRUD operations
+- Role-based access control
 
+### Plans
 
+- Plan CRUD operations
+- Active / Inactive status
+- Business rules prevent editing or deleting plans with active memberships
 
-\## Features
+### Sessions
 
+- Session CRUD operations
+- Automatic session status calculation:
+  - Upcoming
+  - Ongoing
+  - Completed
 
+### Bookings
 
-\- \*\*Members\*\* — CRUD, photo upload, separate health record page
+- Book a session
+- Cancel a booking
+- Track attendance
+- Mark members as attended for ongoing sessions
 
-\- \*\*Trainers\*\* — CRUD
+### Memberships
 
-\- \*\*Plans\*\* — CRUD, Active/Inactive toggle (blocked while members are currently subscribed)
+- Subscribe members to plans
+- Automatically calculate membership end dates
+- Validate membership-related business rules
 
-\- \*\*Sessions\*\* — CRUD, with a computed status (`Upcoming` / `Ongoing` / `Completed`)
+### Dashboard
 
-\- \*\*Bookings\*\* — book/cancel, attendance tracking (`Mark Attended`) for ongoing sessions
+The home dashboard displays live statistics calculated directly from the database.
 
-\- \*\*Memberships\*\* — subscribe a member to a plan, end date computed automatically
+## Business Rules
 
-\- \*\*Home dashboard\*\* — live stats computed from the database
+The system enforces business rules at the application level.
 
+Examples:
 
+- A plan with active members cannot be edited or deleted.
+- A session that has already started cannot be booked.
+- Attendance can only be marked for ongoing sessions.
+- Access to Trainer operations depends on the user's role.
+- Members can only access their own account information.
 
-All of it enforced with real business rules — e.g. a plan with active members can't be edited or deleted, a session that's already started can't be booked.
+## Tech Stack
 
+- ASP.NET Core MVC
+- .NET 9
+- Entity Framework Core
+- SQL Server
+- ASP.NET Core Identity
+- AutoMapper
+- C#
 
+## Getting Started
 
-\## Tech Stack
+### 1. Clone the repository
 
-
-
-ASP.NET Core MVC · .NET 9 · Entity Framework Core · SQL Server · ASP.NET Core Identity · AutoMapper
-
-
-
-\## Getting Started
-
-
-
-1\. Clone the repo
-
-2\. Add your SQL Server connection string to `GymSystem/appsettings.Development.json`:
-
-&#x20;  ```json
-
-&#x20;  {
-
-&#x20;    "ConnectionStrings": {
-
-&#x20;      "DefaultConnection": "Server=YOUR\_SERVER;Database=GymSystem;Trusted\_Connection=True;TrustServerCertificate=True"
-
-&#x20;    }
-
-&#x20;  }
-
-&#x20;  ```
-
-3\. Run migrations: `Update-Database` (or `dotnet ef database update`)
-
-4\. Run the project — a SuperAdmin account is seeded automatically on first launch
-
+```bash
+git clone <repository-url>
